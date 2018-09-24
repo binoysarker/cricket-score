@@ -45,7 +45,6 @@ import {bus} from '../../app';
 export default {
   data(){
     return {
-      menuItem:{name:'Done',class:'active',active:false,routeLink:'/done'},
       button:'/svg/tick.svg',
       showRightCircle: false,
       pickedTeam:'',
@@ -56,8 +55,9 @@ export default {
       ],
     }
   },
+
   mounted(){
-    bus.$emit('addDoneBtn',this.menuItem);
+    bus.$emit('resetMenu','/match-setup');
   },
 
 }
@@ -68,9 +68,9 @@ export default {
   background-color: #E1E4ED;
 }
 
-.active{
+/* .active{
   background-color: #75C791;
-}
+} */
 .button{
   float: right;
 }

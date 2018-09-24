@@ -79,7 +79,7 @@ export default {
     }
   },
   mounted(){
-    bus.$emit('resetMenu');
+    bus.$emit('resetMenu','settings');
   },
 }
 </script>

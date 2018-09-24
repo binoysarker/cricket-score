@@ -7,6 +7,10 @@
       <router-view  name="settings-section"></router-view>
       <router-view  name="match-setup"></router-view>
       <router-view  name="teams-section"></router-view>
+      <router-view  name="strike-batter"></router-view>
+      <router-view  name="non-strike-batter"></router-view>
+      <router-view  name="bowler-section"></router-view>
+      <router-view  name="score-sheet"></router-view>
     </transition>
   </section>
 </template>
@@ -15,7 +19,7 @@
 
     }
 </script>
-<style lang="css" >
+<style lang="css" scoped>
 /* Enter and leave animations can use different */
 /* durations and timing functions.              */
 .slide-fade-enter-active {

@@ -17,15 +17,75 @@ export default {
       ],
     }
   },
-  created(){
-    bus.$on('addDoneBtn',(data) => {
-      if (this.menuItems.name != 'Done') {
-        this.menuItems.shift();
-        this.menuItems.push(data);
+  watch:{
+    '$route'(to,from){
+      console.log(to.path);
+      console.log(from.path);
+      if (to.path == '/done' && from.path == '/match-setup') {
+        this.$router.push({path:'/strike-batter'});
       }
-    });
-    bus.$on('resetMenu',()=>{
-      // this.menuItems = this.menuItems;
+      else if (to.path == '/done' && from.path == '/strike-batter') {
+        this.$router.push({path:'/non-strike-batter'});
+      }
+      else if (to.path == '/done' && from.path == '/non-strike-batter') {
+        this.$router.push({path:'/bowler'});
+      }
+      else if (to.path == '/done' && from.path == '/bowler') {
+        this.$router.push({path:'/score-sheet'});
+      }
+    }
+  },
+
+  created(){
+    let defaultMenu = [
+      {name:'Teams',class:'active',active:false,routeLink:'/teams'},
+      {name:'Settings',class:'active',active:false,routeLink:'/settings'},
+      {name:'Match Setup',class:'active',active:false,routeLink:'/match-setup'}
+    ];
+    let changeDefaultMenu = [
+      {name:'Settings',class:'active',active:false,routeLink:'/settings'},
+      {name:'Match Setup',class:'active',active:false,routeLink:'/match-setup'},
+      {name:'Done',class:'active',active:false,routeLink:'/done'}
+    ];
+    bus.$on('resetMenu',(data)=>{
+      // console.log(data);
+      switch (data) {
+        case 'settings':
+          this.menuItems = defaultMenu;
+          break;
+        case 'teams':
+          this.menuItems = defaultMenu;
+          break;
+        case '/match-setup':
+          this.menuItems = changeDefaultMenu;
+          break;
+        case '/strike-batter':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({name:'Select Strike Batter',class:'active',active:false,routeLink:'/strike-batter'},
+          {name:'Done',class:'active',active:false,routeLink:'/done'});
+          this.menuItems = changeDefaultMenu;
+          break;
+        case '/non-strike-batter':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({name:'Select non-strike Batter',class:'active',active:false,routeLink:'/non-strike-batter'},
+          {name:'Done',class:'active',active:false,routeLink:'/done'});
+          this.menuItems = changeDefaultMenu;
+          break;
+        case '/bowler':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({name:'Select Bowler',class:'active',active:false,routeLink:'/bowler'},
+          {name:'Done',class:'active',active:false,routeLink:'/done'});
+          this.menuItems = changeDefaultMenu;
+          break;
+        case '/score-sheet':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({name:'ScoreSheet',class:'active',active:false,routeLink:'/score-sheet'},
+          {name:'Exit',class:'active',active:false,routeLink:'/teams'});
+          this.menuItems = changeDefaultMenu;
+          break;
+        default:
+      }
+
     });
   },
 }

@@ -55,7 +55,11 @@
 </template>
 
 <script>
+import {bus} from '../../app';
 export default {
+  mounted(){
+    bus.$emit('resetMenu','teams');
+  },
 }
 </script>
 
