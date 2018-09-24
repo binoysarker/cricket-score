@@ -33,8 +33,8 @@ export default {
     }
   },
   mounted(){
-    bus.$emit('resetMenu','/strike-batter');
-    
+    bus.$emit('resetMenu','/new-batter');
+
   },
 }
 </script>

@@ -65,6 +65,7 @@ export default {
   data(){
     return {
       myDataVariable1:'',
+      selectNewBatter:false,
       menu1Items:[
         {id:1,name:'No Balls count as balls faced',active:false,class:'test',button:'no-ball'},
         {id:2,name:'Wides count as balls faced',active:false,class:'test',button:'wide'},
@@ -77,6 +78,14 @@ export default {
         {id:3,name:'Max balls per over',active:false,class:'test',symbol1:'&#8853;',symbol2:'&#8854;'},
       ],
     }
+  },
+  watch:{
+    selectNewBatter(value){
+      if (value) {
+        this.$router.push({path:'/strike-batter'});
+        bus.$emit('resetMenu','selectNewBatter');
+      }
+    },
   },
   mounted(){
     bus.$emit('resetMenu','settings');

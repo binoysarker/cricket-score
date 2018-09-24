@@ -29,6 +29,7 @@
         <div class="tab-pane fade show active" id="nav-score" role="tabpanel" aria-labelledby="nav-score-tab">
           <!-- table for sore section -->
           <table class="table ">
+            <!-- fot batters section -->
             <thead class="thead-light">
               <tr>
                 <th scope="col">Batters</th>
@@ -40,14 +41,14 @@
             </thead>
             <tbody>
               <tr>
-                <td>Batter 1</td>
+                <td class="name">Batter 1</td>
                 <td>4</td>
                 <td>4</td>
                 <td>0</td>
                 <td>0</td>
               </tr>
               <tr>
-                <td>Batter 2</td>
+                <td class="name">Batter 2</td>
                 <td>4</td>
                 <td>4</td>
                 <td>0</td>
@@ -61,6 +62,35 @@
                 <td>0</td>
               </tr>
             </tbody>
+            <!-- /fot batters section -->
+            <!-- fot bowlers section -->
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Bowlers</th>
+                <th scope="col">O</th>
+                <th scope="col">M</th>
+                <th scope="col">R</th>
+                <th scope="col">W</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">bowler 1</td>
+                <td>4</td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td class="name">bowler 2</td>
+                <td>4</td>
+                <td>4</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+            <!-- /fot bowlers section -->
+
           </table>
           <!-- /table for sore section -->
         </div>
@@ -150,7 +180,7 @@
               </td>
             </tr>
             <tr>
-              <td v-for="(item,index) in buttonImagesRow3" :key="item.id">
+              <td v-for="(item,index) in buttonImagesRow3" @click="selectNewBatter(item)" :key="item.id">
                 <img :src="item.location" alt="">
               </td>
             </tr>
@@ -159,6 +189,40 @@
       </div>
     </div>
     <!-- /button section -->
+    <!-- modal section -->
+    <!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h1>Over Summary</h1>
+        <br>
+        6 2 4 nb+3lb 2 3 1
+        <br>
+        batter 1: 1-0-19-0
+        <br>
+        <br>
+        After 1 over: 22/0
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">End Over</button>
+        <button type="button" @click="goToNextPage()" class="btn btn-primary">Continue this over</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- /modal section -->
   </section>
 </template>
 
@@ -167,6 +231,7 @@ import {bus} from '../../app';
 export default {
   data(){
     return {
+      showModal:false,
       buttonImagesRow1:[
         {id:1,location:'/image/empty-circle.jpg',active:false},
         {id:2,location:'/image/button-one.jpg',active:false},
@@ -190,9 +255,26 @@ export default {
       ]
     }
   },
+  watch:{
+    showModal(value){
+      if (value) {
+        $('#exampleModal').modal('toggle');
+      }
+    }
+  },
+  methods:{
+    goToNextPage(){
+      this.$router.push({path:'/wicket'});
+      $('#exampleModal').modal('hide');
+    },
+    selectNewBatter(item){
+      if (item.location == '/image/button-wicket.jpg') {
+        this.$router.push({path:'/new-batter'});
+      }
+    },
+  },
   mounted(){
     bus.$emit('resetMenu','/score-sheet');
-
   },
 }
 </script>
@@ -280,5 +362,13 @@ export default {
   width: 40px;
   height: 40px;
   cursor: pointer;
+}
+.modal-body{
+  text-align: center;
+  font-size: 15px;
+}
+.name{
+  background-color: #00519C;
+  border-radius: 20px;
 }
 </style>

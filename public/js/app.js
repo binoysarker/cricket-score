@@ -838,9 +838,11 @@ var StrikeBatter = Vue.component('strike-batter', __webpack_require__(75));
 var NonStrikeBatter = Vue.component('non-Strike-batter', __webpack_require__(80));
 var Bowler = Vue.component('bowler-section', __webpack_require__(85));
 var ScoreSheet = Vue.component('bowler-section', __webpack_require__(90));
+var Wicket = Vue.component('bowler-section', __webpack_require__(99));
+var NewBatter = Vue.component('bowler-section', __webpack_require__(104));
 
 // router section
-var routes = [{ path: '/teams', components: { 'teams-section': TeamsSection } }, { path: '/settings', components: { 'settings-section': SettingsSection } }, { path: '/match-setup', components: { 'match-setup': MatchSetup } }, { path: '/strike-batter', components: { 'strike-batter': StrikeBatter } }, { path: '/non-strike-batter', components: { 'non-strike-batter': NonStrikeBatter } }, { path: '/bowler', components: { 'bowler-section': Bowler } }, { path: '/score-sheet', components: { 'score-sheet': ScoreSheet } }];
+var routes = [{ path: '/teams', components: { 'teams-section': TeamsSection } }, { path: '/settings', components: { 'settings-section': SettingsSection } }, { path: '/match-setup', components: { 'match-setup': MatchSetup } }, { path: '/strike-batter', components: { 'strike-batter': StrikeBatter } }, { path: '/non-strike-batter', components: { 'non-strike-batter': NonStrikeBatter } }, { path: '/bowler', components: { 'bowler-section': Bowler } }, { path: '/score-sheet', components: { 'score-sheet': ScoreSheet } }, { path: '/wicket', components: { 'wicket-section': Wicket } }, { path: '/new-batter', components: { 'new-batter': NewBatter } }];
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
   routes: routes // short for `routes: routes`
 });
@@ -51497,8 +51499,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   watch: {
     '$route': function $route(to, from) {
-      console.log(to.path);
-      console.log(from.path);
+      // console.log(to.path);
+      // console.log(from.path);
       if (to.path == '/done' && from.path == '/match-setup') {
         this.$router.push({ path: '/strike-batter' });
       } else if (to.path == '/done' && from.path == '/strike-batter') {
@@ -51507,6 +51509,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.$router.push({ path: '/bowler' });
       } else if (to.path == '/done' && from.path == '/bowler') {
         this.$router.push({ path: '/score-sheet' });
+      } else if (to.path == '/done' && from.path == '/wicket') {
+        this.$router.push({ path: '/score-sheet' });
+      } else if (to.path == '/done' && from.path == '/new-batter') {
+        this.$router.push({ path: '/score-sheet' });
+      } else if (to.path == '/new-batter' && from.path == '/score-sheet') {
+        this.$router.push({ path: '/new-batter' });
       }
     }
   },
@@ -51548,7 +51556,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           changeDefaultMenu.push({ name: 'ScoreSheet', class: 'active', active: false, routeLink: '/score-sheet' }, { name: 'Exit', class: 'active', active: false, routeLink: '/teams' });
           _this.menuItems = changeDefaultMenu;
           break;
+        case 'wicket':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({ name: 'Cancel', class: 'active', active: false, routeLink: '/score-sheet' }, { name: 'Wicket', class: 'active', active: false, routeLink: '/wicket' }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
+          _this.menuItems = changeDefaultMenu;
+          break;
+        case '/new-batter':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({ name: 'Cancel', class: 'active', active: false, routeLink: '/score-sheet' }, { name: 'Select New Batter', class: 'active', active: false, routeLink: '/new-batter' }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
+          _this.menuItems = changeDefaultMenu;
+          break;
         default:
+          _this.menuItems = defaultMenu;
       }
     });
   }
@@ -51680,7 +51699,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(10px);\n          transform: translateX(10px);\n  opacity: 0;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -51691,6 +51710,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter an
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -51740,7 +51761,11 @@ var render = function() {
           _vm._v(" "),
           _c("router-view", { attrs: { name: "bowler-section" } }),
           _vm._v(" "),
-          _c("router-view", { attrs: { name: "score-sheet" } })
+          _c("router-view", { attrs: { name: "score-sheet" } }),
+          _vm._v(" "),
+          _c("router-view", { attrs: { name: "wicket-section" } }),
+          _vm._v(" "),
+          _c("router-view", { attrs: { name: "new-batter" } })
         ],
         1
       )
@@ -52222,9 +52247,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       myDataVariable1: '',
+      selectNewBatter: false,
       menu1Items: [{ id: 1, name: 'No Balls count as balls faced', active: false, class: 'test', button: 'no-ball' }, { id: 2, name: 'Wides count as balls faced', active: false, class: 'test', button: 'wide' }, { id: 3, name: 'Allow Last Man Standing', active: false, class: 'test', button: 'last-man' }, { id: 4, name: 'Unlimited dismissals', active: false, class: 'test', button: 'dismissals' }],
       MaxCountItems: [{ id: 1, name: 'Max balls per batter', active: false, class: 'test', symbol1: '&#8853;', symbol2: '&#8854;' }, { id: 2, name: 'Max runs per batter', active: false, class: 'test', symbol1: '&#8853;', symbol2: '&#8854;' }, { id: 3, name: 'Max balls per over', active: false, class: 'test', symbol1: '&#8853;', symbol2: '&#8854;' }]
     };
+  },
+
+  watch: {
+    selectNewBatter: function selectNewBatter(value) {
+      if (value) {
+        this.$router.push({ path: '/strike-batter' });
+        __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', 'selectNewBatter');
+      }
+    }
   },
   mounted: function mounted() {
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', 'settings');
@@ -53383,7 +53418,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.circle1[data-v-21d40cc0]{\n  /* float: left; */\n  width: 80px;\n  height: 80px;\n  background-color: #6BC4F0;\n  border-radius: 50%;\n  position: relative;\n}\n.circle2[data-v-21d40cc0]{\n  /* float: left; */\n  width: 80px;\n  height: 80px;\n  background-color: #6BC4F0;\n  border-radius: 50%;\n  position: relative;\n}\n.text1[data-v-21d40cc0]{\n  width: 50px;\n  height: 50px;\n  font-size: 30px;\n  position: absolute;\n  left: 2.5rem;\n  top: 4.4rem;\n  color: white;\n}\n.text2[data-v-21d40cc0]{\n  width: 50px;\n  height: 50px;\n  font-size: 30px;\n  position: absolute;\n  left: 2.5rem;\n  top: 10.5rem;\n  color: white;\n}\n.teamScore[data-v-21d40cc0]{\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n  padding: 10px;\n}\n.Name[data-v-21d40cc0]{\n  -ms-flex-item-align: center;\n      align-self: center;\n  font-size: 20px;\n  font-weight: bold;\n}\n.Score[data-v-21d40cc0]{\n  float: right;\n  -ms-flex-item-align: center;\n      align-self: center;\n  font-size: 20px;\n  font-weight: bold;\n}\n.card > nav[data-v-21d40cc0]{\n  text-decoration: none;\n  background-color: #E1E4ED;\n  color: black !important;\n}\n.table[data-v-21d40cc0]{\n  color: black;\n}\n.buttonSection[data-v-21d40cc0]{\n  border: 2px solid #91959B;\n  border-radius: 5px 5px 0 0;\n}\n.buttonSection img[data-v-21d40cc0]{\n  width: 80px;\n  height: 80px;\n  cursor: pointer;\n}\n.overview[data-v-21d40cc0]{\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.overview .over-count[data-v-21d40cc0]{\n  font-size: 20px;\n  font-weight: bold;\n}\n.bgChange[data-v-21d40cc0]{\n  background-color: #E1E4ED;\n}\n.editSection img[data-v-21d40cc0]{\n  width: 40px;\n  height: 40px;\n  cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n.circle1[data-v-21d40cc0]{\n  /* float: left; */\n  width: 80px;\n  height: 80px;\n  background-color: #6BC4F0;\n  border-radius: 50%;\n  position: relative;\n}\n.circle2[data-v-21d40cc0]{\n  /* float: left; */\n  width: 80px;\n  height: 80px;\n  background-color: #6BC4F0;\n  border-radius: 50%;\n  position: relative;\n}\n.text1[data-v-21d40cc0]{\n  width: 50px;\n  height: 50px;\n  font-size: 30px;\n  position: absolute;\n  left: 2.5rem;\n  top: 4.4rem;\n  color: white;\n}\n.text2[data-v-21d40cc0]{\n  width: 50px;\n  height: 50px;\n  font-size: 30px;\n  position: absolute;\n  left: 2.5rem;\n  top: 10.5rem;\n  color: white;\n}\n.teamScore[data-v-21d40cc0]{\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n  padding: 10px;\n}\n.Name[data-v-21d40cc0]{\n  -ms-flex-item-align: center;\n      align-self: center;\n  font-size: 20px;\n  font-weight: bold;\n}\n.Score[data-v-21d40cc0]{\n  float: right;\n  -ms-flex-item-align: center;\n      align-self: center;\n  font-size: 20px;\n  font-weight: bold;\n}\n.card > nav[data-v-21d40cc0]{\n  text-decoration: none;\n  background-color: #E1E4ED;\n  color: black !important;\n}\n.table[data-v-21d40cc0]{\n  color: black;\n}\n.buttonSection[data-v-21d40cc0]{\n  border: 2px solid #91959B;\n  border-radius: 5px 5px 0 0;\n}\n.buttonSection img[data-v-21d40cc0]{\n  width: 80px;\n  height: 80px;\n  cursor: pointer;\n}\n.overview[data-v-21d40cc0]{\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}\n.overview .over-count[data-v-21d40cc0]{\n  font-size: 20px;\n  font-weight: bold;\n}\n.bgChange[data-v-21d40cc0]{\n  background-color: #E1E4ED;\n}\n.editSection img[data-v-21d40cc0]{\n  width: 40px;\n  height: 40px;\n  cursor: pointer;\n}\n.modal-body[data-v-21d40cc0]{\n  text-align: center;\n  font-size: 15px;\n}\n.name[data-v-21d40cc0]{\n  background-color: #00519C;\n  border-radius: 20px;\n}\n", ""]);
 
 // exports
 
@@ -53559,15 +53594,99 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      showModal: false,
       buttonImagesRow1: [{ id: 1, location: '/image/empty-circle.jpg', active: false }, { id: 2, location: '/image/button-one.jpg', active: false }, { id: 3, location: '/image/button-two.jpg', active: false }, { id: 4, location: '/image/button-three.jpg', active: false }, { id: 5, location: '/image/button-fill.jpg', active: false }],
       buttonImagesRow2: [{ id: 1, location: '/image/button-four.jpg', active: false }, { id: 2, location: '/image/button-six.jpg', active: false }, { id: 3, location: '/image/button-five.jpg', active: false }, { id: 4, location: '/image/empty-circle.jpg', active: false }, { id: 5, location: '/image/button-action.jpg', active: false }],
       buttonImagesRow3: [{ id: 1, location: '/image/button-black.jpg', active: false }, { id: 2, location: '/image/button-black.jpg', active: false }, { id: 3, location: '/image/button-black.jpg', active: false }, { id: 4, location: '/image/button-black.jpg', active: false }, { id: 5, location: '/image/button-wicket.jpg', active: false }]
     };
+  },
+
+  watch: {
+    showModal: function showModal(value) {
+      if (value) {
+        $('#exampleModal').modal('toggle');
+      }
+    }
+  },
+  methods: {
+    goToNextPage: function goToNextPage() {
+      this.$router.push({ path: '/wicket' });
+      $('#exampleModal').modal('hide');
+    },
+    selectNewBatter: function selectNewBatter(item) {
+      if (item.location == '/image/button-wicket.jpg') {
+        this.$router.push({ path: '/new-batter' });
+      }
+    }
   },
   mounted: function mounted() {
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/score-sheet');
@@ -53616,15 +53735,76 @@ var render = function() {
             _c(
               "tr",
               _vm._l(_vm.buttonImagesRow3, function(item, index) {
-                return _c("td", { key: item.id }, [
-                  _c("img", { attrs: { src: item.location, alt: "" } })
-                ])
+                return _c(
+                  "td",
+                  {
+                    key: item.id,
+                    on: {
+                      click: function($event) {
+                        _vm.selectNewBatter(item)
+                      }
+                    }
+                  },
+                  [_c("img", { attrs: { src: item.location, alt: "" } })]
+                )
               })
             )
           ])
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "exampleModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(4),
+              _vm._v(" "),
+              _vm._m(5),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("End Over")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.goToNextPage()
+                      }
+                    }
+                  },
+                  [_vm._v("Continue this over")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -53740,7 +53920,7 @@ var staticRenderFns = [
                 _vm._v(" "),
                 _c("tbody", [
                   _c("tr", [
-                    _c("td", [_vm._v("Batter 1")]),
+                    _c("td", { staticClass: "name" }, [_vm._v("Batter 1")]),
                     _vm._v(" "),
                     _c("td", [_vm._v("4")]),
                     _vm._v(" "),
@@ -53752,7 +53932,7 @@ var staticRenderFns = [
                   ]),
                   _vm._v(" "),
                   _c("tr", [
-                    _c("td", [_vm._v("Batter 2")]),
+                    _c("td", { staticClass: "name" }, [_vm._v("Batter 2")]),
                     _vm._v(" "),
                     _c("td", [_vm._v("4")]),
                     _vm._v(" "),
@@ -53765,6 +53945,46 @@ var staticRenderFns = [
                   _vm._v(" "),
                   _c("tr", [
                     _c("td", [_vm._v("PARTNERSHIP")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("4")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("4")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("0")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("0")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("thead", { staticClass: "thead-light" }, [
+                  _c("tr", [
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("Bowlers")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("O")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("M")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("R")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("W")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tbody", [
+                  _c("tr", [
+                    _c("td", { staticClass: "name" }, [_vm._v("bowler 1")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("4")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("4")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("0")]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v("0")])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", { staticClass: "name" }, [_vm._v("bowler 2")]),
                     _vm._v(" "),
                     _c("td", [_vm._v("4")]),
                     _vm._v(" "),
@@ -53838,7 +54058,9 @@ var staticRenderFns = [
                     ]),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v("\n                batter name\n              ")
+                      _vm._v(
+                        "\n                  batter name\n                "
+                      )
                     ]),
                     _vm._v(" "),
                     _c("td"),
@@ -53858,7 +54080,9 @@ var staticRenderFns = [
                     ]),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v("\n                batter name\n              ")
+                      _vm._v(
+                        "\n                  batter name\n                "
+                      )
                     ]),
                     _vm._v(" "),
                     _c("td"),
@@ -53883,12 +54107,53 @@ var staticRenderFns = [
       _c("img", { attrs: { src: "/image/cross-image.jpg", alt: "" } }),
       _vm._v(" "),
       _c("span", { staticClass: "over-count" }, [
-        _vm._v("\n        Over 1.2\n        "),
+        _vm._v("\n          Over 1.2\n          "),
         _c("br"),
-        _vm._v("\n        LEG BY\n      ")
+        _vm._v("\n          LEG BY\n        ")
       ]),
       _vm._v(" "),
       _c("img", { attrs: { src: "/image/right-image.jpg", alt: "" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", {
+        staticClass: "modal-title",
+        attrs: { id: "exampleModalLabel" }
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body" }, [
+      _c("h1", [_vm._v("Over Summary")]),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v("\n        6 2 4 nb+3lb 2 3 1\n        "),
+      _c("br"),
+      _vm._v("\n        batter 1: 1-0-19-0\n        "),
+      _c("br"),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v("\n        After 1 over: 22/0\n      ")
     ])
   }
 ]
@@ -53906,6 +54171,446 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(109)
+}
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(102)
+/* template */
+var __vue_template__ = __webpack_require__(111)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-15acc7c8"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/CricketScore/Wicket.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-15acc7c8", Component.options)
+  } else {
+    hotAPI.reload("data-v-15acc7c8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 100 */,
+/* 101 */,
+/* 102 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', 'wicket');
+  }
+});
+
+/***/ }),
+/* 103 */,
+/* 104 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(105)
+}
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(107)
+/* template */
+var __vue_template__ = __webpack_require__(108)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/CricketScore/NewBatter.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-42f5816e", Component.options)
+  } else {
+    hotAPI.reload("data-v-42f5816e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(106);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("51e60590", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-42f5816e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NewBatter.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-42f5816e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NewBatter.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.button{\n  float: right;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 107 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      pickedName: '',
+      batterNames: [{ name: 'name 1', class: 'active', active: false }, { name: 'name 2', class: 'active', active: false }, { name: 'name 3', class: 'active', active: false }, { name: 'name 4', class: 'active', active: false }, { name: 'name 5', class: 'active', active: false }, { name: 'name 6', class: 'active', active: false }, { name: 'name 7', class: 'active', active: false }]
+    };
+  },
+  mounted: function mounted() {
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/new-batter');
+  }
+});
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", { staticClass: "strike-batter" }, [
+    _c(
+      "ul",
+      { staticClass: "list-group" },
+      _vm._l(_vm.batterNames, function(item, index) {
+        return _c("li", { key: item.name, staticClass: "list-group-item" }, [
+          _c("div", { staticClass: "form-check" }, [
+            _c(
+              "label",
+              {
+                staticClass: "form-check-label",
+                attrs: { for: item.name.replace(" ", "") }
+              },
+              [_vm._v("\n          " + _vm._s(item.name) + "\n        ")]
+            ),
+            _vm._v(" "),
+            _c("span", { staticClass: "button" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.pickedName,
+                    expression: "pickedName"
+                  }
+                ],
+                staticClass: "form-check-input",
+                attrs: {
+                  type: "radio",
+                  id: item.name.replace(" ", ""),
+                  name: item.name.replace(" ", "")
+                },
+                domProps: {
+                  value: item.name.replace(" ", ""),
+                  checked: _vm._q(_vm.pickedName, item.name.replace(" ", ""))
+                },
+                on: {
+                  change: function($event) {
+                    _vm.pickedName = item.name.replace(" ", "")
+                  }
+                }
+              })
+            ])
+          ])
+        ])
+      })
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-42f5816e", module.exports)
+  }
+}
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(110);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("68e62e4b", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-15acc7c8\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Wicket.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-15acc7c8\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Wicket.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.wicketSection[data-v-15acc7c8]{\n  font-size: 15px;\n  font-weight: bold;\n}\n.form-group[data-v-15acc7c8]{\n  float: right;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("section", { staticClass: "wicketSection" }, [
+      _c("ul", { staticClass: "list-group menu3" }, [
+        _c("li", { staticClass: "list-group-item justify-content-between" }, [
+          _vm._v("\n      Batter Out\n      "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "select",
+              { staticClass: "form-control", attrs: { id: "exampleSelect1" } },
+              [
+                _c("option", [_vm._v("batter name 1")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("batter name 2")])
+              ]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "list-group-item justify-content-between" }, [
+          _vm._v("\n      Dismissal Type\n      "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "select",
+              { staticClass: "form-control", attrs: { id: "exampleSelect1" } },
+              [
+                _c("option", [_vm._v("Select")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("2")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("3")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("4")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("5")])
+              ]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "list-group-item justify-content-between" }, [
+          _vm._v("\n      Fielder(Assist)\n      "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "select",
+              { staticClass: "form-control", attrs: { id: "exampleSelect1" } },
+              [
+                _c("option", [_vm._v("Select")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("2")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("3")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("4")]),
+                _vm._v(" "),
+                _c("option", [_vm._v("5")])
+              ]
+            )
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-15acc7c8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

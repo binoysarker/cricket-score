@@ -11,6 +11,8 @@
       <router-view  name="non-strike-batter"></router-view>
       <router-view  name="bowler-section"></router-view>
       <router-view  name="score-sheet"></router-view>
+      <router-view  name="wicket-section"></router-view>
+      <router-view  name="new-batter"></router-view>
     </transition>
   </section>
 </template>
@@ -30,7 +32,7 @@
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
+  transform: translateX(100px);
   opacity: 0;
 }
 </style>

@@ -35,6 +35,8 @@ const StrikeBatter = Vue.component('strike-batter', require('./components/Cricke
 const NonStrikeBatter = Vue.component('non-Strike-batter', require('./components/CricketScore/NonStrikeBatter.vue'));
 const Bowler = Vue.component('bowler-section', require('./components/CricketScore/Bowler.vue'));
 const ScoreSheet = Vue.component('bowler-section', require('./components/CricketScore/ScoreSheet.vue'));
+const Wicket = Vue.component('bowler-section', require('./components/CricketScore/Wicket.vue'));
+const NewBatter = Vue.component('bowler-section', require('./components/CricketScore/NewBatter.vue'));
 
 // router section
 const routes = [
@@ -45,6 +47,8 @@ const routes = [
   { path: '/non-strike-batter', components:{'non-strike-batter': NonStrikeBatter} },
   { path: '/bowler', components:{'bowler-section': Bowler} },
   { path: '/score-sheet', components:{'score-sheet': ScoreSheet} },
+  { path: '/wicket', components:{'wicket-section': Wicket} },
+  { path: '/new-batter', components:{'new-batter': NewBatter} },
 ];
 const router = new VueRouter({
   routes // short for `routes: routes`

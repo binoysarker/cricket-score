@@ -19,8 +19,8 @@ export default {
   },
   watch:{
     '$route'(to,from){
-      console.log(to.path);
-      console.log(from.path);
+      // console.log(to.path);
+      // console.log(from.path);
       if (to.path == '/done' && from.path == '/match-setup') {
         this.$router.push({path:'/strike-batter'});
       }
@@ -32,6 +32,15 @@ export default {
       }
       else if (to.path == '/done' && from.path == '/bowler') {
         this.$router.push({path:'/score-sheet'});
+      }
+      else if (to.path == '/done' && from.path == '/wicket') {
+        this.$router.push({path:'/score-sheet'});
+      }
+      else if (to.path == '/done' && from.path == '/new-batter') {
+        this.$router.push({path:'/score-sheet'});
+      }
+      else if (to.path == '/new-batter' && from.path == '/score-sheet') {
+        this.$router.push({path:'/new-batter'});
       }
     }
   },
@@ -83,7 +92,26 @@ export default {
           {name:'Exit',class:'active',active:false,routeLink:'/teams'});
           this.menuItems = changeDefaultMenu;
           break;
+        case 'wicket':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push(
+            {name:'Cancel',class:'active',active:false,routeLink:'/score-sheet'},
+            {name:'Wicket',class:'active',active:false,routeLink:'/wicket'},
+            {name:'Done',class:'active',active:false,routeLink:'/done'}
+          );
+          this.menuItems = changeDefaultMenu;
+          break;
+        case '/new-batter':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push(
+            {name:'Cancel',class:'active',active:false,routeLink:'/score-sheet'},
+            {name:'Select New Batter',class:'active',active:false,routeLink:'/new-batter'},
+            {name:'Done',class:'active',active:false,routeLink:'/done'}
+          );
+          this.menuItems = changeDefaultMenu;
+          break;
         default:
+          this.menuItems = defaultMenu;
       }
 
     });
