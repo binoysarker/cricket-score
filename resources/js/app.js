@@ -51,6 +51,7 @@ const routes = [
   { path: '/new-batter', components:{'new-batter': NewBatter} },
 ];
 const router = new VueRouter({
+  // mode:'history',
   routes // short for `routes: routes`
 });
 

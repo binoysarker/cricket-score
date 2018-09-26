@@ -275,6 +275,9 @@ export default {
   },
   mounted(){
     bus.$emit('resetMenu','/score-sheet');
+    bus.$on('base_url',(data)=>{
+      console.log(data);
+    });
   },
 }
 </script>

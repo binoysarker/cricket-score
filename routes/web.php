@@ -14,4 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource('cricket-score','ScoreController');
+Route::resource('cricket-score','ScoreController')->middleware('auth');
+Route::resource('team','TeamController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('settings','SettingController');

@@ -45,6 +45,8 @@ import {bus} from '../../app';
 export default {
   data(){
     return {
+      base_url:'',
+      user_id:'',
       button:'/svg/tick.svg',
       showRightCircle: false,
       pickedTeam:'',
@@ -58,6 +60,16 @@ export default {
 
   mounted(){
     bus.$emit('resetMenu','/match-setup');
+    bus.$on('base_url',(data)=>{
+      this.base_url = data;
+    });
+    bus.$on('user_id',(data)=>{
+      this.user_id = data;
+    });
+    // now to get the team name based on the user_id and verses
+    axios.get(this.base_url+'/team')
+    .then((res)=>{console.log(res.data);})
+    .catch((err)=>{err.response});
   },
 
 }

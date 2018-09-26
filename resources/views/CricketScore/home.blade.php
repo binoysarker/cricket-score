@@ -3,7 +3,7 @@
   Home
 @endsection
 @section('main-content')
-  <home-page >
+  <home-page base_url="{{url('')}}">
 
 </home-page>
 @endsection

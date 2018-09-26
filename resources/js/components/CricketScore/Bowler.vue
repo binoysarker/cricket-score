@@ -34,6 +34,9 @@ export default {
   },
   mounted(){
     bus.$emit('resetMenu','/bowler');
+    bus.$on('base_url',(data)=>{
+      console.log(data);
+    });
   },
 }
 </script>
