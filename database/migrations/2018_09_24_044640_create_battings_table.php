@@ -15,6 +15,7 @@ class CreateBattingsTable extends Migration
     {
         Schema::create('battings', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
             $table->integer('team_id');
             $table->integer('team_member_id');
             $table->tinyInteger('strike_batter')->default(0);

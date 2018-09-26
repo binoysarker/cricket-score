@@ -15,17 +15,18 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('no_ball_count');
-            $table->integer('wide_ball_count');
+            $table->integer('user_id');
+            $table->tinyInteger('no_ball_count');
+            $table->tinyInteger('wide_ball_count');
             $table->tinyInteger('last_man_standing');
             $table->tinyInteger('unlimited_dismissals');
-            $table->tinyInteger('max_balls_per_batter');
-            $table->tinyInteger('max_run_per_batter');
-            $table->tinyInteger('max_balls_per_over');
-            $table->tinyInteger('overs_per_innings');
-            $table->tinyInteger('max_overs_per_bowler');
-            $table->string('toss_won_by');
-            $table->string('elected_to');
+            $table->integer('max_balls_per_batter');
+            $table->integer('max_run_per_batter');
+            $table->integer('max_balls_per_over');
+            $table->integer('overs_per_innings');
+            $table->integer('max_overs_per_bowler');
+            $table->string('toss_won_by')->nullable();
+            $table->string('elected_to')->nullable();
             $table->timestamps();
         });
     }

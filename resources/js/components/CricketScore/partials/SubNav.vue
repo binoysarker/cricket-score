@@ -137,4 +137,8 @@ export default {
   color: white;
   font-weight: bold;
 }
+.router-link-active{
+  font-size: 18px;
+  font-weight: bold;
+}
 </style>

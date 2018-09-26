@@ -34,7 +34,9 @@ export default {
   },
   mounted(){
     bus.$emit('resetMenu','/strike-batter');
-    
+    bus.$on('base_url',(data)=>{
+      console.log(data);
+    });
   },
 }
 </script>

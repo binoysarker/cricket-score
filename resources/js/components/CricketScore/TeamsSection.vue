@@ -3,29 +3,32 @@
     <div class="jumbotron">
       <h1 class="display-3">Select Teams</h1>
       <div class="form-group">
-        <select class="form-control" id="exampleSelect1">
-          <option>Select Team A</option>
-          <option>team 1</option>
-          <option>team 2</option>
-          <option>team 3</option>
-          <option>team 4</option>
+        <select class="form-control" v-if="TeamNames.length >= 0 " v-model="selectTeamA" id="exampleSelect1">
+          <option v-for="(item,index) in TeamNames[0]" :value="item" :key="index" >{{item.name}}</option>
         </select>
+        <select class="form-control" v-else name="" >
+          <option value="no_team">No Team Name</option>
+        </select>
+        <small class="alert alert-danger" role="alert" v-if="hasError">{{errors[0].errors.name[0]}}</small>
+
       </div>
       <h1 class="verses">Vs</h1>
       <div class="form-group">
-        <select class="form-control" id="exampleSelect1">
-          <option>Select Team B</option>
-          <option>team 1</option>
-          <option>team 2</option>
-          <option>team 3</option>
-          <option>team 4</option>
+        <select class="form-control" v-if="TeamNames.length >= 0 " v-model="selectTeamB" id="exampleSelect1">
+          <option :value="item"
+          v-for="(item,index) in TeamNames[0]"
+          :key="index" >{{item.name}}</option>
         </select>
+        <select class="form-control" v-else name="" >
+          <option value="no_team">No Team Name</option>
+        </select>
+        <small class="alert alert-danger" role="alert" v-if="hasError">{{errors[0].errors.name[0]}}</small>
       </div>
       <p class="lead">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
           Create New
         </button>
-        <button type="button" class="btn btn-primary" name="done">Done</button>
+        <button type="button" @click="goToNextPage()" class="btn btn-primary" name="done">Done</button>
       </p>
     </div>
     <!-- Modal -->
@@ -41,12 +44,12 @@
           <div class="modal-body">
             <div class="form-group">
               <label for="inputText">Team Name</label>
-              <input type="text" class="form-control" id="inputText" aria-describedby="emailHelp" placeholder="Team Name">
+              <input type="text" class="form-control" ref="teamName" id="inputText" aria-describedby="emailHelp" placeholder="Team Name">
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" @click="saveTeamName()" class="btn btn-primary" data-dismiss="modal">Save changes</button>
           </div>
         </div>
       </div>
@@ -57,9 +60,63 @@
 <script>
 import {bus} from '../../app';
 export default {
-  mounted(){
-    bus.$emit('resetMenu','teams');
+  data(){
+    return {
+      TeamNames:[],
+      selectTeamA:'',
+      selectTeamB:'',
+      base_url:'',
+      errors:[],
+      hasError:false
+    }
   },
+  methods:{
+    saveTeamName(){
+      let teamName = this.$refs.teamName.value.trim().toString();
+      if (teamName != null) {
+        // make axios request to save the team name
+        axios.post(this.base_url+'/team',{name:teamName})
+        .then((res)=>{
+          // console.log(res.data);
+          // this.TeamNames.push(res.data);
+          location.reload();
+        })
+        .catch((error)=>{
+          // console.log(error.response.data);
+          this.hasError = true;
+          this.errors.push(error.response.data);
+        });
+      }
+    },
+    goToNextPage(){
+      // let teamName = this.$refs.teamName.value.trim().toString();
+      // save the verses info
+      axios.post(this.base_url+'/team',{TeamA:this.selectTeamA.name,TeamB:this.selectTeamB.name})
+      .then((res)=>{console.log(res.data);})
+      .catch((error)=>{console.log(error.response);});
+      this.$router.push({path:'/settings'});
+    },
+  },
+  mounted(){
+    // console.log(this.TeamNames.length);
+    this.hasError = false;
+    bus.$emit('resetMenu','teams');
+    bus.$on('base_url',(data)=>{
+      this.base_url = data;
+    });
+    // get all the team names
+    axios.get(this.base_url+'/team')
+    .then((res)=>{
+      // console.log(this.TeamNames);
+      this.TeamNames.push(res.data);
+    })
+    .catch((err)=>{
+      // console.log(err.response);
+      this.hasError = true;
+      this.errors.push(err.response);
+    });
+  },
+
 }
 </script>
 

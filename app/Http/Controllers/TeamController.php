@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class TeamController extends Controller
 {
     /**
@@ -14,7 +14,8 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+      $team = Team::all();
+      return $team;
     }
 
     /**
@@ -35,7 +36,38 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      // return $request->TeamA;
+      // now to check where is the teamA and teamB in the database
+      if (isset($request->TeamA) && isset($request->TeamB)) {
+        $getTeamA = Team::where('name',$request->TeamA)->first();
+        $getTeamB = Team::where('name',$request->TeamB)->first();
+        $getTeamA->verses = $request->TeamB;
+        $getTeamB->verses = $request->TeamA;
+        $getTeamA->save();
+        $getTeamB->save();
+        // return $getTeamA;
+
+      }
+      if (isset($request->name)) {
+        // validation
+        $validatedData = $request->validate([
+          'name' => 'required|unique:teams|max:255'
+        ]);
+        if ($validatedData) {
+
+          // save the data in the teams table
+          $team = new Team();
+          $team->user_id = auth()->user()->id;
+          $team->name = $request->name;
+          $team->save();
+
+          // return $team;
+        }else {
+          $errors = $validator->errors();
+          return $errors;
+        }
+      }
+
     }
 
     /**
@@ -46,7 +78,7 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        //
+        // return $team->user_id;
     }
 
     /**

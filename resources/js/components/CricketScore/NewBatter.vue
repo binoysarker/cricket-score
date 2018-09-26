@@ -34,6 +34,9 @@ export default {
   },
   mounted(){
     bus.$emit('resetMenu','/new-batter');
+    bus.$on('base_url',(data)=>{
+      console.log(data);
+    });
 
   },
 }
