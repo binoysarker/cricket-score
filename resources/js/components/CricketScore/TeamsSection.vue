@@ -91,10 +91,11 @@ export default {
     goToNextPage(){
       // let teamName = this.$refs.teamName.value.trim().toString();
       // save the verses info
+      bus.$emit('saveTeamNames',{TeamA:this.selectTeamA.name,TeamB:this.selectTeamB.name});
       axios.post(this.base_url+'/team',{TeamA:this.selectTeamA.name,TeamB:this.selectTeamB.name})
       .then((res)=>{console.log(res.data);})
       .catch((error)=>{console.log(error.response);});
-      this.$router.push({path:'/settings'});
+      this.$router.push({path:'/teams/'+this.selectTeamA.name+'&'+this.selectTeamB.name, props:true});
     },
   },
   mounted(){

@@ -116,16 +116,20 @@ export default {
       ],
     }
   },
+  created(){
+    console.log(this.test);
+  },
   watch:{
-    selectNewBatter(value){
-      if (value) {
-        this.$router.push({path:'/strike-batter'});
-        bus.$emit('resetMenu','selectNewBatter');
-      }
-    },
+    // selectNewBatter(value){
+    //   if (value) {
+    //     this.$router.push({path:'/strike-batter'});
+    //     bus.$emit('resetMenu','selectNewBatter');
+    //   }
+    // },
   },
   mounted(){
     this.hasError = false;
+    bus.$emit('saveTeamNames',{TeamA:this.$route.params.teamA,TeamB:this.$route.params.teamB});
     bus.$emit('resetMenu','settings');
     bus.$on('base_url',(data)=>{
       this.base_url = data;

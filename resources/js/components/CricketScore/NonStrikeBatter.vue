@@ -1,13 +1,13 @@
 <template lang="html">
   <section class="non-strike-batter">
     <ul class="list-group">
-      <li class="list-group-item" v-for="(item,index) in nonStrikeBatterNames" :key="item.name">
+      <li class="list-group-item" v-for="(item,index) in nonStrikeBatterNames" v-if="item.selected == 1 && item.member_name != $route.params.strikeBatterSelectedToBat" :key="index">
         <div class="form-check">
-          <label class="form-check-label" :for="item.name.replace(' ','')">
-            {{item.name}}
+          <label class="form-check-label" :for="item.member_name">
+            {{item.member_name}}
           </label>
           <span class="button">
-            <input class="form-check-input" type="radio" :id="item.name.replace(' ','')" :name="item.name.replace(' ','')" :value="item.name.replace(' ','')" v-model="pickedName">
+            <input class="form-check-input" type="radio" :id="item.member_name" :name="item.member_name" :value="item.member_name" v-model="nonStrikeBatterSelectedToBat">
           </span>
         </div>
       </li>
@@ -20,24 +20,32 @@ import {bus} from '../../app';
 export default {
   data(){
     return {
-      pickedName:'',
-      nonStrikeBatterNames:[
-        {name:'name 1',class:'active',active:false},
-        {name:'name 2',class:'active',active:false},
-        {name:'name 3',class:'active',active:false},
-        {name:'name 4',class:'active',active:false},
-        {name:'name 5',class:'active',active:false},
-        {name:'name 6',class:'active',active:false},
-        {name:'name 7',class:'active',active:false},
-      ],
+      base_url:'',
+      nonStrikeBatterNames:null,
+      nonStrikeBatterSelectedToBat:''
     }
   },
   mounted(){
     bus.$emit('resetMenu','/non-strike-batter');
     bus.$on('base_url',(data)=>{
-      console.log(data);
+      this.base_url = data;
     });
+    // now to get the team_members for the toss_won_by team
+    axios.get(this.base_url+'/team-member/'+this.$route.params.teamName)
+    .then((res)=>{
+      // console.log(res.data);
+      this.nonStrikeBatterNames = res.data;
+    })
+    .catch((err)=>{console.log(err.response);});
   },
+  beforeRouteLeave (to, from, next){
+    if (to.path == '/done' && from.path == '/non-strike-batter/'+this.$route.params.teamName+'&'+this.$route.params.elected+'&'+this.$route.params.strikeBatterSelectedToBat) {
+      bus.$emit('nonStrikeBatterSelectedToBat',this.nonStrikeBatterSelectedToBat);
+      next();
+    }else {
+      next(false);
+    }
+  }
 }
 </script>
 

@@ -7,6 +7,7 @@
       <router-view name="settings-section"></router-view>
       <router-view name="match-setup"></router-view>
       <router-view name="teams-section"></router-view>
+      <router-view name="teams-member-section"></router-view>
       <router-view name="strike-batter"></router-view>
       <router-view name="non-strike-batter"></router-view>
       <router-view name="bowler-section"></router-view>

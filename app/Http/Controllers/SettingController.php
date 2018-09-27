@@ -14,7 +14,8 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
+        $setting = Setting::where('user_id',auth()->user()->id)->first();
+        return $setting;
     }
 
     /**
@@ -35,6 +36,22 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
+      if ($request->toss_won_by && $request->elected_to) {
+        // return $request->all();
+        // now overwrite the data for user
+        $setting = new Setting();
+        $setting = Setting::where('user_id',auth()->user()->id)->update(
+          [
+            'user_id' => auth()->user()->id,
+            'toss_won_by' => $request->toss_won_by,
+            'elected_to' => $request->elected_to
+          ]
+        );
+        return $setting;
+        // $setting->toss_won_by = $request->toss_won_by;
+        // $setting->elected_to = $request->elected_to;
+        // $setting->save();
+      }
       // return $request->all();
       // validation
       $validatedData = $request->validate([
@@ -56,6 +73,7 @@ class SettingController extends Controller
         // check if the user is already have data the table
         $user = Setting::where('user_id',auth()->user()->id)->first();
         if (isset($user)) {
+
           // now to overwrite the data of the user
           $user->user_id = auth()->user()->id;
           $user->no_ball_count = $request->no_ball_count;

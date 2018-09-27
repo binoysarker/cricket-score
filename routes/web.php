@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 Route::resource('cricket-score','ScoreController')->middleware('auth');
 Route::resource('team','TeamController');
-
+Route::resource('team-member','TeamMemberController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

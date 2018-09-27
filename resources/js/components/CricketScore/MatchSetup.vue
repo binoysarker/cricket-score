@@ -2,13 +2,13 @@
   <section class="MatchSetupSection">
     <ul class="list-group">
       <li class="list-group-item heading">Toss won by</li>
-      <li class="list-group-item" v-for="(item,index) in teamMembers" :key="item.id">
+      <li class="list-group-item" v-for="(item,index) in teamMembers" :key="index">
         <div class="form-check">
-          <label class="form-check-label" :for="item.name.replace(' ','')">
-            {{item.name}}
+          <label class="form-check-label" :for="item">
+            {{item}}
           </label>
           <span class="button">
-            <input class="form-check-input" type="radio" :id="item.name.replace(' ','')" :name="item.name.replace(' ','')" :value="item.name.replace(' ','')" v-model="pickedTeam">
+            <input class="form-check-input" type="radio" :id="item" :name="item" :value="item" v-model="pickedTeam">
           </span>
         </div>
       </li>
@@ -46,30 +46,40 @@ export default {
   data(){
     return {
       base_url:'',
-      user_id:'',
       button:'/svg/tick.svg',
       showRightCircle: false,
       pickedTeam:'',
       elected:'',
-      teamMembers:[
-        {id:1,name:'Team A',class:'active',active:false},
-        {id:2,name:'Team B',class:'active',active:false},
-      ],
+      teamMembers:null,
     }
   },
 
   mounted(){
+    bus.$emit('saveTeamNames',{TeamA:this.$route.params.teamA,TeamB:this.$route.params.teamB});
     bus.$emit('resetMenu','/match-setup');
     bus.$on('base_url',(data)=>{
       this.base_url = data;
     });
-    bus.$on('user_id',(data)=>{
-      this.user_id = data;
-    });
-    // now to get the team name based on the user_id and verses
-    axios.get(this.base_url+'/team')
-    .then((res)=>{console.log(res.data);})
-    .catch((err)=>{err.response});
+    let teamNames = {
+      teamA:this.$route.params.teamA,
+      teamB:this.$route.params.teamB
+    };
+    this.teamMembers = teamNames;
+
+  },
+  beforeRouteLeave (to, from, next){
+    if (to.path == '/done' && from.path == '/match-setup/'+this.$route.params.teamA+'&'+this.$route.params.teamB) {
+      // save toss won by and elelted to data to the db
+      axios.post(this.base_url+'/settings',{toss_won_by:this.pickedTeam,elected_to:this.elected})
+      .then((res)=>{
+        // console.log(res.data);
+      })
+      .catch((error)=>{console.log(error.response);}) ;
+      bus.$emit('goToStrikeBatter',{team:this.pickedTeam,elected:this.elected});
+      next();
+    }else {
+      next(false);
+    }
   },
 
 }

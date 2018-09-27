@@ -69,6 +69,7 @@ class TeamController extends Controller
       }
 
     }
+    
 
     /**
      * Display the specified resource.

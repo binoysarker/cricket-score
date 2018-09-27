@@ -37,15 +37,18 @@ const Bowler = Vue.component('bowler-section', require('./components/CricketScor
 const ScoreSheet = Vue.component('bowler-section', require('./components/CricketScore/ScoreSheet.vue'));
 const Wicket = Vue.component('bowler-section', require('./components/CricketScore/Wicket.vue'));
 const NewBatter = Vue.component('bowler-section', require('./components/CricketScore/NewBatter.vue'));
+const TeamMembers = Vue.component('bowler-section', require('./components/CricketScore/TeamMembers.vue'));
 
 // router section
 const routes = [
   { path: '/teams', components:{'teams-section': TeamsSection} },
-  { path: '/settings', components:{'settings-section': SettingsSection} },
-  { path: '/match-setup', components:{'match-setup': MatchSetup} },
-  { path: '/strike-batter', components:{'strike-batter': StrikeBatter} },
-  { path: '/non-strike-batter', components:{'non-strike-batter': NonStrikeBatter} },
-  { path: '/bowler', components:{'bowler-section': Bowler} },
+  { path: '/teams/:teamA&:teamB', components:{'teams-member-section': TeamMembers},props:true },
+  { path: '/settings/:teamA&:teamB', components:{'settings-section': SettingsSection} },
+  { path: '/match-setup/:teamA&:teamB', components:{'match-setup': MatchSetup} },
+  // { path: '/strike-batter', components:{'strike-batter': StrikeBatter} },
+  { path: '/strike-batter/:teamName&:elected', components:{'strike-batter': StrikeBatter},props:true },
+  { path: '/non-strike-batter/:teamName&:elected&:strikeBatterSelectedToBat', components:{'non-strike-batter': NonStrikeBatter},props:true },
+  { path: '/bowler/:teamB', components:{'bowler-section': Bowler} },
   { path: '/score-sheet', components:{'score-sheet': ScoreSheet} },
   { path: '/wicket', components:{'wicket-section': Wicket} },
   { path: '/new-batter', components:{'new-batter': NewBatter} },

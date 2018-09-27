@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TeamMember;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class TeamMemberController extends Controller
@@ -27,6 +28,7 @@ class TeamMemberController extends Controller
         //
     }
 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -35,7 +37,51 @@ class TeamMemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request->all();
+
+        $validatedData = $request->validate([
+          'member_name' => 'required|string|unique:team_members'
+        ]);
+        if ($validatedData) {
+          // get team_id and user_id from the team teable and store in the team_members table
+          $team = Team::where([
+            'user_id' => auth()->user()->id,
+            'name' => $request->team_name
+            ])->first(['id','user_id','name']);
+            // return $team->name;
+            $teamMember = TeamMember::where([
+              'user_id'=> $team->user_id,
+              'team_id' => $team->id,
+              'member_name' => $request->member_name
+              ])->get();
+            if (count($teamMember) > 0) {
+              // update the data
+              $teamMember = TeamMember::where([
+                'user_id'=> $team->user_id,
+                'team_id' => $team->id,
+                'member_name' => $request->member_name
+                ])->update([
+                'user_id'=> $team->user_id,
+                'team_id' => $team->id,
+                'member_name' => $request->member_name
+              ]);
+            }else {
+              // save the new data
+              $teamMember = new TeamMember();
+              $teamMember->user_id = $team->user_id;
+              $teamMember->team_id = $team->id;
+              $teamMember->member_name = $request->member_name;
+              $teamMember->save();
+              // flash message
+              return response()->json(['status'=>'member is created']);
+            }
+            // now get the team member with their team info
+            // $getAllTeamMember = TeamMember::where('user_id',$team->user_id)->get();
+            // return $getAllTeamMember;
+        }else {
+          $errors = $validator->errors();
+          return $errors;
+        }
     }
 
     /**
@@ -44,9 +90,14 @@ class TeamMemberController extends Controller
      * @param  \App\Models\TeamMember  $teamMember
      * @return \Illuminate\Http\Response
      */
-    public function show(TeamMember $teamMember)
+    public function show($teamName)
     {
-        //
+      // now to get the team_members according to the team name
+      $getName = Team::where('name',$teamName)->first();
+      // return $getName;
+      $teamMemers = Team::find($getName->id)->members;
+      // $teamMemers = $teams->with('members');
+      return $teamMemers;
     }
 
     /**
@@ -69,7 +120,16 @@ class TeamMemberController extends Controller
      */
     public function update(Request $request, TeamMember $teamMember)
     {
-        //
+      if ($teamMember->selected == 0) {
+        $teamMember->selected = 1;
+        $teamMember->save();
+        // return $teamMember->selected;
+      }elseif ($teamMember->selected == 1) {
+        $teamMember->selected = 0;
+        $teamMember->save();
+        // return $teamMember->selected;
+      }
+
     }
 
     /**

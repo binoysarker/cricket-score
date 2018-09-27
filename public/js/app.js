@@ -111,9 +111,12 @@ var Bowler = Vue.component('bowler-section', __webpack_require__(85));
 var ScoreSheet = Vue.component('bowler-section', __webpack_require__(90));
 var Wicket = Vue.component('bowler-section', __webpack_require__(95));
 var NewBatter = Vue.component('bowler-section', __webpack_require__(100));
+var TeamMembers = Vue.component('bowler-section', __webpack_require__(105));
 
 // router section
-var routes = [{ path: '/teams', components: { 'teams-section': TeamsSection } }, { path: '/settings', components: { 'settings-section': SettingsSection } }, { path: '/match-setup', components: { 'match-setup': MatchSetup } }, { path: '/strike-batter', components: { 'strike-batter': StrikeBatter } }, { path: '/non-strike-batter', components: { 'non-strike-batter': NonStrikeBatter } }, { path: '/bowler', components: { 'bowler-section': Bowler } }, { path: '/score-sheet', components: { 'score-sheet': ScoreSheet } }, { path: '/wicket', components: { 'wicket-section': Wicket } }, { path: '/new-batter', components: { 'new-batter': NewBatter } }];
+var routes = [{ path: '/teams', components: { 'teams-section': TeamsSection } }, { path: '/teams/:teamA&:teamB', components: { 'teams-member-section': TeamMembers }, props: true }, { path: '/settings/:teamA&:teamB', components: { 'settings-section': SettingsSection } }, { path: '/match-setup/:teamA&:teamB', components: { 'match-setup': MatchSetup } },
+// { path: '/strike-batter', components:{'strike-batter': StrikeBatter} },
+{ path: '/strike-batter/:teamName&:elected', components: { 'strike-batter': StrikeBatter }, props: true }, { path: '/non-strike-batter/:teamName&:elected&:strikeBatterSelectedToBat', components: { 'non-strike-batter': NonStrikeBatter }, props: true }, { path: '/bowler/:teamB', components: { 'bowler-section': Bowler } }, { path: '/score-sheet', components: { 'score-sheet': ScoreSheet } }, { path: '/wicket', components: { 'wicket-section': Wicket } }, { path: '/new-batter', components: { 'new-batter': NewBatter } }];
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
   // mode:'history',
   routes: routes // short for `routes: routes`
@@ -129,6 +132,425 @@ var app = new Vue({
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(47)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -438,425 +860,6 @@ module.exports = {
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-var listToStyles = __webpack_require__(47)
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-module.exports = function (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
@@ -890,7 +893,7 @@ module.exports = g;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 var normalizeHeaderName = __webpack_require__(25);
 
 var DEFAULT_CONTENT_TYPE = {
@@ -14114,7 +14117,7 @@ process.umask = function() { return 0; };
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 var settle = __webpack_require__(26);
 var buildURL = __webpack_require__(28);
 var parseHeaders = __webpack_require__(29);
@@ -25328,7 +25331,7 @@ module.exports = Vue;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(0);
-module.exports = __webpack_require__(105);
+module.exports = __webpack_require__(110);
 
 
 /***/ }),
@@ -46498,7 +46501,7 @@ module.exports = __webpack_require__(22);
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 var bind = __webpack_require__(9);
 var Axios = __webpack_require__(24);
 var defaults = __webpack_require__(6);
@@ -46585,7 +46588,7 @@ function isSlowBuffer (obj) {
 
 
 var defaults = __webpack_require__(6);
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 var InterceptorManager = __webpack_require__(33);
 var dispatchRequest = __webpack_require__(34);
 
@@ -46670,7 +46673,7 @@ module.exports = Axios;
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -46750,7 +46753,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -46823,7 +46826,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -46883,7 +46886,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -47001,7 +47004,7 @@ module.exports = btoa;
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -47061,7 +47064,7 @@ module.exports = (
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -47120,7 +47123,7 @@ module.exports = InterceptorManager;
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 var transformData = __webpack_require__(35);
 var isCancel = __webpack_require__(13);
 var defaults = __webpack_require__(6);
@@ -47213,7 +47216,7 @@ module.exports = function dispatchRequest(config) {
 "use strict";
 
 
-var utils = __webpack_require__(1);
+var utils = __webpack_require__(4);
 
 /**
  * Transform the data for a request or a response
@@ -51076,7 +51079,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(45)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(48)
 /* template */
@@ -51129,7 +51132,7 @@ var content = __webpack_require__(46);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("11c3bb04", content, false, {});
+var update = __webpack_require__(2)("11c3bb04", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -51148,7 +51151,7 @@ if(false) {
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -51393,7 +51396,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(51)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(53)
 /* template */
@@ -51446,7 +51449,7 @@ var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("986740a2", content, false, {});
+var update = __webpack_require__(2)("986740a2", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -51465,7 +51468,7 @@ if(false) {
 /* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -51494,7 +51497,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      menuItems: [{ name: 'Teams', class: 'active', active: false, routeLink: '/teams' }, { name: 'Settings', class: 'active', active: false, routeLink: '/settings' }, { name: 'Match Setup', class: 'active', active: false, routeLink: '/match-setup' }]
+      menuItems: [{ name: 'Teams', class: 'active', active: false, routeLink: '/teams' }, { name: 'Settings', class: 'active', active: false, routeLink: '/settings' }, { name: 'Match Setup', class: 'active', active: false, routeLink: '/match-setup' }],
+      teamName: '',
+      elected: '',
+      strikeBatterSelectedToBat: '',
+      nonStrikeBatterSelectedToBat: '',
+      saveTeamNames: null
     };
   },
 
@@ -51502,12 +51510,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     '$route': function $route(to, from) {
       // console.log(to.path);
       // console.log(from.path);
-      if (to.path == '/done' && from.path == '/match-setup') {
-        this.$router.push({ path: '/strike-batter' });
-      } else if (to.path == '/done' && from.path == '/strike-batter') {
-        this.$router.push({ path: '/non-strike-batter' });
-      } else if (to.path == '/done' && from.path == '/non-strike-batter') {
-        this.$router.push({ path: '/bowler' });
+      if (to.path == '/done' && from.path == '/match-setup/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB) {
+        this.$router.push({ path: '/strike-batter/' + this.teamName + '&' + this.elected });
+      } else if (to.path == '/done' && from.path == '/strike-batter/' + this.teamName + '&' + this.elected) {
+        this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+      } else if (to.path == '/done' && from.path == '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat) {
+        this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamB });
       } else if (to.path == '/done' && from.path == '/bowler') {
         this.$router.push({ path: '/score-sheet' });
       } else if (to.path == '/done' && from.path == '/wicket') {
@@ -51516,6 +51524,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.$router.push({ path: '/score-sheet' });
       } else if (to.path == '/new-batter' && from.path == '/score-sheet') {
         this.$router.push({ path: '/new-batter' });
+      } else if (to.path == '/settings' && from.path == '/teams') {
+        this.$router.push({ path: '/settings' });
+      } else if (to.path == '/match-Setup' && from.path == '/settings') {
+        this.$router.push({ path: '/match-setup/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamA });
       }
     }
   },
@@ -51525,16 +51537,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     var defaultMenu = [{ name: 'Teams', class: 'active', active: false, routeLink: '/teams' }, { name: 'Settings', class: 'active', active: false, routeLink: '/settings' }, { name: 'Match Setup', class: 'active', active: false, routeLink: '/match-setup' }];
     var changeDefaultMenu = [{ name: 'Settings', class: 'active', active: false, routeLink: '/settings' }, { name: 'Match Setup', class: 'active', active: false, routeLink: '/match-setup' }, { name: 'Done', class: 'active', active: false, routeLink: '/done' }];
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('goToStrikeBatter', function (data) {
+      // console.log(data);
+      _this.teamName = data.team;
+      _this.elected = data.elected;
+    });
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('saveTeamNames', function (data) {
+      // console.log(data);
+      _this.saveTeamNames = data;
+    });
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('strikeBatterSelectedToBat', function (data) {
+      // console.log(data);
+      _this.strikeBatterSelectedToBat = data;
+    });
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('nonStrikeBatterSelectedToBat', function (data) {
+      // console.log(data);
+      _this.nonStrikeBatterSelectedToBat = data;
+    });
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('resetMenu', function (data) {
       // console.log(data);
       switch (data) {
         case 'settings':
-          _this.menuItems = defaultMenu;
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({ name: 'Teams', class: 'active', active: false, routeLink: '/teams' }, { name: 'Settings', class: 'active', active: false, routeLink: '/settings/' + _this.saveTeamNames.TeamA + '&' + _this.saveTeamNames.TeamB }, { name: 'Match Setup', class: 'active', active: false, routeLink: '/match-setup/' + _this.saveTeamNames.TeamA + '&' + _this.saveTeamNames.TeamB });
+          _this.menuItems = changeDefaultMenu;
           break;
         case 'teams':
           _this.menuItems = defaultMenu;
           break;
+        case '/team-member':
+          defaultMenu = [];
+          defaultMenu.push({ name: 'Cancel', class: 'active', active: false, routeLink: '/teams' }, { name: 'Select Team Member', class: 'active', active: false, routeLink: '/teams/' + _this.saveTeamNames.TeamA + '&' + _this.saveTeamNames.TeamB }, { name: 'Settings', class: 'active', active: false, routeLink: '/settings/' + _this.saveTeamNames.TeamA + '&' + _this.saveTeamNames.TeamB });
+          _this.menuItems = defaultMenu;
+          break;
         case '/match-setup':
+          changeDefaultMenu = [];
+          changeDefaultMenu.push({ name: 'Settings', class: 'active', active: false, routeLink: '/settings/' + _this.saveTeamNames.TeamA + '&' + _this.saveTeamNames.TeamB }, { name: 'Match Setup', class: 'active', active: false, routeLink: '/match-setup/' + _this.saveTeamNames.TeamA + '&' + _this.saveTeamNames.TeamB }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
           _this.menuItems = changeDefaultMenu;
           break;
         case '/strike-batter':
@@ -51567,6 +51605,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           changeDefaultMenu.push({ name: 'Cancel', class: 'active', active: false, routeLink: '/score-sheet' }, { name: 'Select New Batter', class: 'active', active: false, routeLink: '/new-batter' }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
           _this.menuItems = changeDefaultMenu;
           break;
+
         default:
           _this.menuItems = defaultMenu;
       }
@@ -51588,7 +51627,7 @@ var render = function() {
     _vm._l(_vm.menuItems, function(item, index) {
       return _c(
         "li",
-        { key: item.id, staticClass: "nav-item mr-4 ml-4 " },
+        { key: item.id, staticClass: "nav-item mr-4 ml-2 " },
         [
           _c(
             "router-link",
@@ -51623,7 +51662,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(56)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(58)
 /* template */
@@ -51676,7 +51715,7 @@ var content = __webpack_require__(57);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("698f8f31", content, false, {});
+var update = __webpack_require__(2)("698f8f31", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -51695,12 +51734,12 @@ if(false) {
 /* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n\n", ""]);
 
 // exports
 
@@ -51712,6 +51751,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
+//
 //
 //
 //
@@ -51766,6 +51806,8 @@ var render = function() {
           _vm._v(" "),
           _c("router-view", { attrs: { name: "teams-section" } }),
           _vm._v(" "),
+          _c("router-view", { attrs: { name: "teams-member-section" } }),
+          _vm._v(" "),
           _c("router-view", { attrs: { name: "strike-batter" } }),
           _vm._v(" "),
           _c("router-view", { attrs: { name: "non-strike-batter" } }),
@@ -51803,7 +51845,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(61)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(63)
 /* template */
@@ -51856,7 +51898,7 @@ var content = __webpack_require__(62);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("34f1fc49", content, false, {});
+var update = __webpack_require__(2)("34f1fc49", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -51875,7 +51917,7 @@ if(false) {
 /* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -51940,30 +51982,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       base_url: '',
-      user_id: '',
       button: '/svg/tick.svg',
       showRightCircle: false,
       pickedTeam: '',
       elected: '',
-      teamMembers: [{ id: 1, name: 'Team A', class: 'active', active: false }, { id: 2, name: 'Team B', class: 'active', active: false }]
+      teamMembers: null
     };
   },
   mounted: function mounted() {
     var _this = this;
 
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('saveTeamNames', { TeamA: this.$route.params.teamA, TeamB: this.$route.params.teamB });
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/match-setup');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
       _this.base_url = data;
     });
-    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('user_id', function (data) {
-      _this.user_id = data;
-    });
-    // now to get the team name based on the user_id and verses
-    axios.get(this.base_url + '/team').then(function (res) {
-      console.log(res.data);
-    }).catch(function (err) {
-      err.response;
-    });
+    var teamNames = {
+      teamA: this.$route.params.teamA,
+      teamB: this.$route.params.teamB
+    };
+    this.teamMembers = teamNames;
+  },
+  beforeRouteLeave: function beforeRouteLeave(to, from, next) {
+    if (to.path == '/done' && from.path == '/match-setup/' + this.$route.params.teamA + '&' + this.$route.params.teamB) {
+      // save toss won by and elelted to data to the db
+      axios.post(this.base_url + '/settings', { toss_won_by: this.pickedTeam, elected_to: this.elected }).then(function (res) {
+        // console.log(res.data);
+      }).catch(function (error) {
+        console.log(error.response);
+      });
+      __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('goToStrikeBatter', { team: this.pickedTeam, elected: this.elected });
+      next();
+    } else {
+      next(false);
+    }
   }
 });
 
@@ -51985,15 +52037,12 @@ var render = function() {
         ]),
         _vm._v(" "),
         _vm._l(_vm.teamMembers, function(item, index) {
-          return _c("li", { key: item.id, staticClass: "list-group-item" }, [
+          return _c("li", { key: index, staticClass: "list-group-item" }, [
             _c("div", { staticClass: "form-check" }, [
               _c(
                 "label",
-                {
-                  staticClass: "form-check-label",
-                  attrs: { for: item.name.replace(" ", "") }
-                },
-                [_vm._v("\n          " + _vm._s(item.name) + "\n        ")]
+                { staticClass: "form-check-label", attrs: { for: item } },
+                [_vm._v("\n          " + _vm._s(item) + "\n        ")]
               ),
               _vm._v(" "),
               _c("span", { staticClass: "button" }, [
@@ -52007,18 +52056,14 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-check-input",
-                  attrs: {
-                    type: "radio",
-                    id: item.name.replace(" ", ""),
-                    name: item.name.replace(" ", "")
-                  },
+                  attrs: { type: "radio", id: item, name: item },
                   domProps: {
-                    value: item.name.replace(" ", ""),
-                    checked: _vm._q(_vm.pickedTeam, item.name.replace(" ", ""))
+                    value: item,
+                    checked: _vm._q(_vm.pickedTeam, item)
                   },
                   on: {
                     change: function($event) {
-                      _vm.pickedTeam = item.name.replace(" ", "")
+                      _vm.pickedTeam = item
                     }
                   }
                 })
@@ -52118,7 +52163,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(66)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(68)
 /* template */
@@ -52171,7 +52216,7 @@ var content = __webpack_require__(67);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("313a682a", content, false, {});
+var update = __webpack_require__(2)("313a682a", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -52190,7 +52235,7 @@ if(false) {
 /* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -52314,19 +52359,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }]
     };
   },
+  created: function created() {
+    console.log(this.test);
+  },
 
   watch: {
-    selectNewBatter: function selectNewBatter(value) {
-      if (value) {
-        this.$router.push({ path: '/strike-batter' });
-        __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', 'selectNewBatter');
-      }
-    }
+    // selectNewBatter(value){
+    //   if (value) {
+    //     this.$router.push({path:'/strike-batter'});
+    //     bus.$emit('resetMenu','selectNewBatter');
+    //   }
+    // },
   },
   mounted: function mounted() {
     var _this = this;
 
     this.hasError = false;
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('saveTeamNames', { TeamA: this.$route.params.teamA, TeamB: this.$route.params.teamB });
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', 'settings');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
       _this.base_url = data;
@@ -52764,7 +52813,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(71)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(73)
 /* template */
@@ -52817,7 +52866,7 @@ var content = __webpack_require__(72);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("883d5e9e", content, false, {});
+var update = __webpack_require__(2)("883d5e9e", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -52836,7 +52885,7 @@ if(false) {
 /* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -52947,12 +52996,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     goToNextPage: function goToNextPage() {
       // let teamName = this.$refs.teamName.value.trim().toString();
       // save the verses info
+      __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('saveTeamNames', { TeamA: this.selectTeamA.name, TeamB: this.selectTeamB.name });
       axios.post(this.base_url + '/team', { TeamA: this.selectTeamA.name, TeamB: this.selectTeamB.name }).then(function (res) {
         console.log(res.data);
       }).catch(function (error) {
         console.log(error.response);
       });
-      this.$router.push({ path: '/settings' });
+      this.$router.push({ path: '/teams/' + this.selectTeamA.name + '&' + this.selectTeamB.name, props: true });
     }
   },
   mounted: function mounted() {
@@ -53239,7 +53289,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(76)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(78)
 /* template */
@@ -53292,7 +53342,7 @@ var content = __webpack_require__(77);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("5183c7c8", content, false, {});
+var update = __webpack_require__(2)("5183c7c8", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -53311,7 +53361,7 @@ if(false) {
 /* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -53350,15 +53400,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      pickedName: '',
-      batterNames: [{ name: 'name 1', class: 'active', active: false }, { name: 'name 2', class: 'active', active: false }, { name: 'name 3', class: 'active', active: false }, { name: 'name 4', class: 'active', active: false }, { name: 'name 5', class: 'active', active: false }, { name: 'name 6', class: 'active', active: false }, { name: 'name 7', class: 'active', active: false }]
+      base_url: '',
+      elected_to: '',
+      teamName: '',
+      strikeBatterSelectedToBat: '',
+      batterNames: null
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/strike-batter');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
-      console.log(data);
+      _this.base_url = data;
     });
+    // now to get the team_members for the toss_won_by team
+    axios.get(this.base_url + '/team-member/' + this.$route.params.teamName).then(function (res) {
+      // console.log(res.data);
+      _this.batterNames = res.data;
+    }).catch(function (err) {
+      console.log(err.response);
+    });
+  },
+  beforeRouteLeave: function beforeRouteLeave(to, from, next) {
+    if (to.path == '/done' && from.path == '/strike-batter/' + this.$route.params.teamName + '&' + this.$route.params.elected) {
+      __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('strikeBatterSelectedToBat', this.strikeBatterSelectedToBat);
+      next();
+    } else {
+      next(false);
+    }
   }
 });
 
@@ -53375,46 +53445,55 @@ var render = function() {
       "ul",
       { staticClass: "list-group" },
       _vm._l(_vm.batterNames, function(item, index) {
-        return _c("li", { key: item.name, staticClass: "list-group-item" }, [
-          _c("div", { staticClass: "form-check" }, [
-            _c(
-              "label",
-              {
-                staticClass: "form-check-label",
-                attrs: { for: item.name.replace(" ", "") }
-              },
-              [_vm._v("\n          " + _vm._s(item.name) + "\n        ")]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "button" }, [
-              _c("input", {
-                directives: [
+        return item.selected == 1
+          ? _c("li", { key: index, staticClass: "list-group-item" }, [
+              _c("div", { staticClass: "form-check" }, [
+                _c(
+                  "label",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.pickedName,
-                    expression: "pickedName"
-                  }
-                ],
-                staticClass: "form-check-input",
-                attrs: {
-                  type: "radio",
-                  id: item.name.replace(" ", ""),
-                  name: item.name.replace(" ", "")
-                },
-                domProps: {
-                  value: item.name.replace(" ", ""),
-                  checked: _vm._q(_vm.pickedName, item.name.replace(" ", ""))
-                },
-                on: {
-                  change: function($event) {
-                    _vm.pickedName = item.name.replace(" ", "")
-                  }
-                }
-              })
+                    staticClass: "form-check-label",
+                    attrs: { for: item.member_name }
+                  },
+                  [
+                    _vm._v(
+                      "\n          " + _vm._s(item.member_name) + "\n        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "button" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.strikeBatterSelectedToBat,
+                        expression: "strikeBatterSelectedToBat"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      id: item.member_name,
+                      name: item.member_name
+                    },
+                    domProps: {
+                      value: item.member_name,
+                      checked: _vm._q(
+                        _vm.strikeBatterSelectedToBat,
+                        item.member_name
+                      )
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.strikeBatterSelectedToBat = item.member_name
+                      }
+                    }
+                  })
+                ])
+              ])
             ])
-          ])
-        ])
+          : _vm._e()
       })
     )
   ])
@@ -53438,7 +53517,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(81)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(83)
 /* template */
@@ -53491,7 +53570,7 @@ var content = __webpack_require__(82);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("063dffd7", content, false, {});
+var update = __webpack_require__(2)("063dffd7", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -53510,7 +53589,7 @@ if(false) {
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -53549,15 +53628,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      pickedName: '',
-      nonStrikeBatterNames: [{ name: 'name 1', class: 'active', active: false }, { name: 'name 2', class: 'active', active: false }, { name: 'name 3', class: 'active', active: false }, { name: 'name 4', class: 'active', active: false }, { name: 'name 5', class: 'active', active: false }, { name: 'name 6', class: 'active', active: false }, { name: 'name 7', class: 'active', active: false }]
+      base_url: '',
+      nonStrikeBatterNames: null,
+      nonStrikeBatterSelectedToBat: ''
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/non-strike-batter');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
-      console.log(data);
+      _this.base_url = data;
     });
+    // now to get the team_members for the toss_won_by team
+    axios.get(this.base_url + '/team-member/' + this.$route.params.teamName).then(function (res) {
+      // console.log(res.data);
+      _this.nonStrikeBatterNames = res.data;
+    }).catch(function (err) {
+      console.log(err.response);
+    });
+  },
+  beforeRouteLeave: function beforeRouteLeave(to, from, next) {
+    if (to.path == '/done' && from.path == '/non-strike-batter/' + this.$route.params.teamName + '&' + this.$route.params.elected + '&' + this.$route.params.strikeBatterSelectedToBat) {
+      __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('nonStrikeBatterSelectedToBat', this.nonStrikeBatterSelectedToBat);
+      next();
+    } else {
+      next(false);
+    }
   }
 });
 
@@ -53574,46 +53671,56 @@ var render = function() {
       "ul",
       { staticClass: "list-group" },
       _vm._l(_vm.nonStrikeBatterNames, function(item, index) {
-        return _c("li", { key: item.name, staticClass: "list-group-item" }, [
-          _c("div", { staticClass: "form-check" }, [
-            _c(
-              "label",
-              {
-                staticClass: "form-check-label",
-                attrs: { for: item.name.replace(" ", "") }
-              },
-              [_vm._v("\n          " + _vm._s(item.name) + "\n        ")]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "button" }, [
-              _c("input", {
-                directives: [
+        return item.selected == 1 &&
+          item.member_name != _vm.$route.params.strikeBatterSelectedToBat
+          ? _c("li", { key: index, staticClass: "list-group-item" }, [
+              _c("div", { staticClass: "form-check" }, [
+                _c(
+                  "label",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.pickedName,
-                    expression: "pickedName"
-                  }
-                ],
-                staticClass: "form-check-input",
-                attrs: {
-                  type: "radio",
-                  id: item.name.replace(" ", ""),
-                  name: item.name.replace(" ", "")
-                },
-                domProps: {
-                  value: item.name.replace(" ", ""),
-                  checked: _vm._q(_vm.pickedName, item.name.replace(" ", ""))
-                },
-                on: {
-                  change: function($event) {
-                    _vm.pickedName = item.name.replace(" ", "")
-                  }
-                }
-              })
+                    staticClass: "form-check-label",
+                    attrs: { for: item.member_name }
+                  },
+                  [
+                    _vm._v(
+                      "\n          " + _vm._s(item.member_name) + "\n        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "button" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.nonStrikeBatterSelectedToBat,
+                        expression: "nonStrikeBatterSelectedToBat"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      id: item.member_name,
+                      name: item.member_name
+                    },
+                    domProps: {
+                      value: item.member_name,
+                      checked: _vm._q(
+                        _vm.nonStrikeBatterSelectedToBat,
+                        item.member_name
+                      )
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.nonStrikeBatterSelectedToBat = item.member_name
+                      }
+                    }
+                  })
+                ])
+              ])
             ])
-          ])
-        ])
+          : _vm._e()
       })
     )
   ])
@@ -53637,7 +53744,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(86)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(88)
 /* template */
@@ -53690,7 +53797,7 @@ var content = __webpack_require__(87);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("59d8ed80", content, false, {});
+var update = __webpack_require__(2)("59d8ed80", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -53709,7 +53816,7 @@ if(false) {
 /* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -53836,7 +53943,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(91)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(93)
 /* template */
@@ -53889,7 +53996,7 @@ var content = __webpack_require__(92);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("227cee13", content, false, {});
+var update = __webpack_require__(2)("227cee13", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -53908,7 +54015,7 @@ if(false) {
 /* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -54673,7 +54780,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(96)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(98)
 /* template */
@@ -54726,7 +54833,7 @@ var content = __webpack_require__(97);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("68e62e4b", content, false, {});
+var update = __webpack_require__(2)("68e62e4b", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -54745,7 +54852,7 @@ if(false) {
 /* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -54911,7 +55018,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(101)
 }
-var normalizeComponent = __webpack_require__(4)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(103)
 /* template */
@@ -54964,7 +55071,7 @@ var content = __webpack_require__(102);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(3)("51e60590", content, false, {});
+var update = __webpack_require__(2)("51e60590", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -54983,7 +55090,7 @@ if(false) {
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(1)(false);
 // imports
 
 
@@ -55103,6 +55210,721 @@ if (false) {
 
 /***/ }),
 /* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(106)
+}
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(108)
+/* template */
+var __vue_template__ = __webpack_require__(109)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/CricketScore/TeamMembers.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75692f4e", Component.options)
+  } else {
+    hotAPI.reload("data-v-75692f4e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(107);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("f8d54cbe", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-75692f4e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TeamMembers.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-75692f4e\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TeamMembers.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.button{\n  float: right;\n}\nspan.badge{\n  cursor: pointer;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 108 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      base_url: '',
+      selectTeam: '',
+      editTeam: '',
+      teamMemberName: '',
+      batterNames: null,
+      hasStatus: false,
+      statusMessage: ''
+    };
+  },
+
+  watch: {
+    selectTeam: function selectTeam(teamName) {
+      var _this = this;
+
+      // get the team_members name according to the team name
+      axios.get(this.base_url + '/team-member/' + teamName).then(function (res) {
+        // console.log(res.data);
+        _this.batterNames = res.data;
+      }).catch(function (err) {
+        console.log(err.response);
+      });
+    }
+  },
+  methods: {
+    saveEditTeamData: function saveEditTeamData() {
+      var _this2 = this;
+
+      if (this.editTeam == this.$route.params.teamA) {
+        axios.post(this.base_url + '/team-member', { member_name: this.teamMemberName, team_name: this.$route.params.teamA }).then(function (res) {
+          if (res.data.status) {
+            _this2.hasStatus = true;
+            _this2.statusMessage = res.data.status;
+          } else {
+            // console.log(res.data);
+            // this.batterNames = res.data;
+          }
+          location.reload();
+        }).catch(function (err) {
+          console.log(err.response);
+        });
+      } else if (this.editTeam == this.$route.params.teamB) {
+        axios.post(this.base_url + '/team-member', { member_name: this.teamMemberName, team_name: this.$route.params.teamB }).then(function (res) {
+          if (res.data.status) {
+            _this2.hasStatus = true;
+            _this2.statusMessage = res.data.status;
+          } else {
+            // console.log(res.data);
+            // this.batterNames = res.data;
+          }
+        }).catch(function (err) {
+          console.log(err.response);
+        });
+      }
+    },
+    markTeamMembers: function markTeamMembers(item) {
+      // save the seleted data to the team_members table
+      axios({
+        method: 'put',
+        url: this.base_url + '/team-member/' + item.id,
+        data: {
+          picked_names: item.member_name
+        },
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }).then(function (res) {
+        // console.log(res.data);
+
+      }).catch(function (err) {
+        console.log(err.response);
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    // this.hasStatus = false;
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('saveTeamNames', { TeamA: this.$route.params.teamA, TeamB: this.$route.params.teamB });
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/team-member');
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
+      _this3.base_url = data;
+    });
+  }
+});
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", { staticClass: "strike-batter" }, [
+    _c("div", { staticClass: "card mt-2" }, [
+      _vm.hasStatus
+        ? _c(
+            "div",
+            { staticClass: "alert alert-primary", attrs: { role: "alert" } },
+            [
+              _vm._v("\n      " + _vm._s(_vm.statusMessage) + "\n      "),
+              _c(
+                "span",
+                {
+                  staticClass: "badge badge-danger float-right",
+                  on: {
+                    click: function($event) {
+                      _vm.hasStatus = false
+                    }
+                  }
+                },
+                [_vm._v("X")]
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button",
+            "data-toggle": "modal",
+            "data-target": "#exampleModal1"
+          }
+        },
+        [_vm._v("\n      Select Team Members\n    ")]
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-warning",
+          attrs: {
+            type: "button",
+            "data-toggle": "modal",
+            "data-target": "#exampleModal2"
+          }
+        },
+        [_vm._v("\n      Create Team Members\n    ")]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "exampleModal1",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selectTeam,
+                        expression: "selectTeam"
+                      }
+                    ],
+                    staticClass: "custom-select",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.selectTeam = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "option",
+                      { domProps: { value: _vm.$route.params.teamA } },
+                      [_vm._v(_vm._s(_vm.$route.params.teamA))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      { domProps: { value: _vm.$route.params.teamB } },
+                      [_vm._v(_vm._s(_vm.$route.params.teamB))]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  { staticClass: "list-group" },
+                  _vm._l(_vm.batterNames, function(item, index) {
+                    return item.selected != 1
+                      ? _c(
+                          "li",
+                          {
+                            key: index,
+                            staticClass: "list-group-item",
+                            on: {
+                              click: function($event) {
+                                _vm.markTeamMembers(item)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "form-check" }, [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "form-check-label",
+                                  attrs: {
+                                    for: item.member_name.replace(" ", "")
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                  " +
+                                      _vm._s(item.member_name) +
+                                      "\n                "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "button" }, [
+                                _c("input", {
+                                  staticClass: "form-check-input",
+                                  attrs: {
+                                    type: "checkbox",
+                                    id: item.member_name.replace(" ", ""),
+                                    name: item.member_name.replace(" ", "")
+                                  },
+                                  domProps: {
+                                    value: item.member_name.replace(" ", "")
+                                  }
+                                })
+                              ])
+                            ])
+                          ]
+                        )
+                      : _vm._e()
+                  })
+                )
+              ]),
+              _vm._v(" "),
+              _vm._m(1)
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "exampleModal2",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.editTeam,
+                        expression: "editTeam"
+                      }
+                    ],
+                    staticClass: "custom-select",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.editTeam = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "option",
+                      { domProps: { value: _vm.$route.params.teamA } },
+                      [_vm._v(_vm._s(_vm.$route.params.teamA))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      { domProps: { value: _vm.$route.params.teamB } },
+                      [_vm._v(_vm._s(_vm.$route.params.teamB))]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "input-group input-group-sm mb-3" }, [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.teamMemberName,
+                        expression: "teamMemberName"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      "aria-label": "Sizing example input",
+                      "aria-describedby": "inputGroup-sizing-sm"
+                    },
+                    domProps: { value: _vm.teamMemberName },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.teamMemberName = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("br")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        _vm.saveEditTeamData()
+                      }
+                    }
+                  },
+                  [_vm._v("Create")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Selete Team Members")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Save Team Members")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Create Team Memebers")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        {
+          staticClass: "input-group-text",
+          attrs: { id: "inputGroup-sizing-sm" }
+        },
+        [_vm._v("Name:")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-75692f4e", module.exports)
+  }
+}
+
+/***/ }),
+/* 110 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
