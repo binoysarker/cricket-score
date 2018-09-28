@@ -51763,7 +51763,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n.bg-change[data-v-5a0ff601]{\n  background-color: #235594;\n}\n.nav[data-v-5a0ff601]{\n  font-weight: bold;\n  font-size: 15px;\n}\n.nav-link[data-v-5a0ff601]{\n  color: white;\n}\n.nav-link[data-v-5a0ff601]:hover{\n  color: black;\n}\n.active[data-v-5a0ff601]{\n  color: white;\n  font-weight: bold;\n}\n.router-link-active[data-v-5a0ff601]{\n  font-size: 18px;\n  font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n.bg-change[data-v-5a0ff601]{\n  background-color: #235594;\n}\n.nav[data-v-5a0ff601]{\n  font-weight: bold;\n  font-size: 15px;\n}\n.nav-link[data-v-5a0ff601]{\n  color: white;\n}\n.nav-link[data-v-5a0ff601]:hover{\n  color: black;\n}\n.active[data-v-5a0ff601]{\n  color: white;\n  font-weight: bold;\n}\n.router-link-active[data-v-5a0ff601]{\n  font-size: 18px;\n  font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -51850,6 +51850,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       } else if (to.path == '/done' && from.path == '/strike-batter/' + this.teamName + '&' + this.elected) {
         if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
           this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else {
+          this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        }
+      } else if (to.path == '/done' && from.path == '/strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected) {
+        if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else {
+          this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        }
+      } else if (to.path == '/done' && from.path == '/strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected) {
+        if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else {
           this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         }
@@ -51857,66 +51879,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
           this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
         } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+        } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamB + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+        } else {
+          this.$router.push({ path: '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
+        }
+      } else if (to.path == '/done' && from.path == '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat) {
+        if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
           this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+        } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
         } else {
           this.$router.push({ path: '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
         }
       }
     }
   },
-  // watch:{
-  //   '$route'(to,from){
-  //     // console.log(to.path);
-  //     // console.log(from.path);
-  //     if (to.path == '/teams' && from.path == '/') {
-  //       this.$router.push('/teams');
-  //     }
-  //     if (to.path == '/team-member/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB && from.path == '/teams') {
-  //       this.$router.push({path:'/team-member'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB,props:true});
-  //     }
-  //     else if (to.path == '/done' && from.path == '/match-setup/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB) {
-  //       if (this.elected == 'bowl') {
-  //         // here saveTeamNames dose not change but i make second item to be First
-  //         this.$router.push({path:'/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
-  //       }else if(this.elected == 'bat'){
-  //         this.$router.push({path:'/strike-batter/'+this.teamName+'&'+this.elected});
-  //       }
-  //     }
-  //     else if (to.path == '/done' && from.path == '/strike-batter/'+this.teamName == this.saveTeamNames.TeamA ? this.saveTeamNames.TeamA : this.saveTeamNames.TeamB+'&'+this.elected) {
-  //       this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
-  //     }
-  //     else if (to.path == '/done' && from.path == '/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat) {
-  //       if (this.elected == 'bowl') {
-  //         this.$router.push({path:'/score-sheet'});
-  //       }
-  //       else if (this.elected == 'bat') {
-  //         this.$router.push({path:'/bowler/'+this.saveTeamNames.TeamB});
-  //       }
-  //     }
-  //     else if (to.path == '/done' && from.path == '/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected) {
-  //       if (this.elected == 'bowl') {
-  //         this.$router.push({path:'/strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected});
-  //       }else if (this.elected == 'bat') {
-  //         this.$router.push({path:'/score-sheet'});
-  //       }
-  //     }
-  //     else if (to.path == '/done' && from.path == '/wicket') {
-  //       this.$router.push({path:'/score-sheet'});
-  //     }
-  //     else if (to.path == '/done' && from.path == '/new-batter') {
-  //       this.$router.push({path:'/score-sheet'});
-  //     }
-  //     else if (to.path == '/new-batter' && from.path == '/score-sheet') {
-  //       this.$router.push({path:'/new-batter'});
-  //     }
-  //     else if (to.path == '/settings' && from.path == '/teams') {
-  //       this.$router.push({path:'/settings'});
-  //     }
-  //     else if (to.path == '/match-Setup' && from.path == '/settings') {
-  //       this.$router.push({path:'/match-setup/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamA});
-  //     }
-  //   }
-  // },
 
   created: function created() {
     var _this = this;
@@ -53680,6 +53659,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {
     var _this = this;
 
+    // console.log(this.$route.params.elected);
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/strike-batter');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
       _this.base_url = data;

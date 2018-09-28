@@ -32,6 +32,7 @@ export default {
     }
   },
   mounted(){
+    // console.log(this.$route.params.elected);
     bus.$emit('resetMenu','/strike-batter');
     bus.$on('base_url',(data)=>{
       this.base_url = data;
