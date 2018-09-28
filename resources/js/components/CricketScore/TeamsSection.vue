@@ -95,8 +95,8 @@ export default {
       axios.post(this.base_url+'/team',{TeamA:this.selectTeamA.name,TeamB:this.selectTeamB.name})
       .then((res)=>{console.log(res.data);})
       .catch((error)=>{console.log(error.response);});
-      
-      next({path:'/team-member/'+this.selectTeamA.name+'&'+this.selectTeamB.name, props:true});
+
+      this.$router.push({path:'/team-member/'+this.selectTeamA.name+'&'+this.selectTeamB.name, props:true});
     },
   },
   mounted(){
@@ -118,6 +118,7 @@ export default {
       this.errors.push(err.response);
     });
   },
+
 
 }
 </script>

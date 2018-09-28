@@ -49,7 +49,7 @@ const routes = [
   { path: '/strike-batter/:teamName&:elected', components:{'strike-batter': StrikeBatter},props:true },
   { path: '/non-strike-batter/:teamName&:elected&:strikeBatterSelectedToBat', components:{'non-strike-batter': NonStrikeBatter},props:true },
   { path: '/bowler/:teamA&:teamB&:elected', components:{'bowler-section': Bowler} },
-  { path: '/score-sheet', components:{'score-sheet': ScoreSheet} },
+  { path: '/score-sheet/:teamA&:teamB&:elected', components:{'score-sheet': ScoreSheet} },
   { path: '/wicket', components:{'wicket-section': Wicket} },
   { path: '/new-batter', components:{'new-batter': NewBatter} },
 ];

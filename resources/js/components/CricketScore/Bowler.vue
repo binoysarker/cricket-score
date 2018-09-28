@@ -37,12 +37,22 @@ export default {
       this.base_url = data;
     });
     // now to get the team_members for the toss_won_by team
-    axios.get(this.base_url+'/team-member/'+this.$route.params.teamA)
-    .then((res)=>{
-      // console.log(res.data);
-      this.bowlerNames = res.data;
-    })
-    .catch((err)=>{console.log(err.response);});
+
+    if (this.$route.params.elected.slice(0,3) == 'bat') {
+      axios.get(this.base_url+'/team-member/'+this.$route.params.teamB)
+      .then((res)=>{
+        // console.log(res.data);
+        this.bowlerNames = res.data;
+      })
+      .catch((err)=>{console.log(err.response);});
+    }else {
+      axios.get(this.base_url+'/team-member/'+this.$route.params.teamA)
+      .then((res)=>{
+        // console.log(res.data);
+        this.bowlerNames = res.data;
+      })
+      .catch((err)=>{console.log(err.response);});
+    }
   },
   beforeRouteLeave (to, from, next){
     if (to.path == '/done' && from.path == '/bowler/'+this.$route.params.teamA+'&'+this.$route.params.teamB+'&'+this.$route.params.elected) {

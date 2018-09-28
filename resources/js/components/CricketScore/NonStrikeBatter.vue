@@ -45,28 +45,24 @@ export default {
     .catch((err)=>{console.log(err.response);});
   },
   beforeRouteLeave (to, from, next){
-    if (to.path == '/done' && from.path == '/non-strike-batter/'+this.$route.params.teamName+'&'+this.$route.params.elected+'&'+this.$route.params.strikeBatterSelectedToBat) {
-      bus.$emit('nonStrikeBatterSelectedToBat',this.nonStrikeBatterSelectedToBat);
-      // update the strikeBatterSelectedToBat data in the team_members table
-      axios({
-        method: 'put',
-        url: this.base_url+'/team-member/'+this.nonStrikeBatterSelectedToBatId,
-        data: {
-          non_strike_batter:this.nonStrikeBatterSelectedToBat
-        },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      })
-      .then((res)=>{
-        console.log(res.data);
+    bus.$emit('nonStrikeBatterSelectedToBat',this.nonStrikeBatterSelectedToBat);
+    // update the strikeBatterSelectedToBat data in the team_members table
+    axios({
+      method: 'put',
+      url: this.base_url+'/team-member/'+this.nonStrikeBatterSelectedToBatId,
+      data: {
+        non_strike_batter:this.nonStrikeBatterSelectedToBat
+      },
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    })
+    .then((res)=>{
+      console.log(res.data);
 
-      })
-      .catch((err)=>{console.log(err.response);});
-      next();
-    }else {
-      next(false);
-    }
+    })
+    .catch((err)=>{console.log(err.response);});
+    next();
   }
 }
 </script>
