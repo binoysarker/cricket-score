@@ -19,6 +19,7 @@ class CreateTeamMembersTable extends Migration
             $table->integer('team_id');
             $table->string('member_name');
             $table->tinyInteger('selected')->default(0);
+            $table->string('selected_to',55)->nullable();
             $table->timestamps();
         });
     }

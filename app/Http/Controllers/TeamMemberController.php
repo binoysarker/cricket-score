@@ -120,14 +120,28 @@ class TeamMemberController extends Controller
      */
     public function update(Request $request, TeamMember $teamMember)
     {
-      if ($teamMember->selected == 0) {
-        $teamMember->selected = 1;
+      if ($request->picked_name) {
+        if ($teamMember->selected == 0) {
+          $teamMember->selected = 1;
+          $teamMember->save();
+          // return $teamMember->selected;
+        }else if ($teamMember->selected == 1) {
+          $teamMember->selected = 0;
+          $teamMember->save();
+          // return $teamMember->selected;
+        }
+      }
+      else if ($request->strike_batter) {
+        $teamMember->selected_to = 'strike_batter';
         $teamMember->save();
-        // return $teamMember->selected;
-      }elseif ($teamMember->selected == 1) {
-        $teamMember->selected = 0;
+      }
+      else if ($request->non_strike_batter) {
+        $teamMember->selected_to = 'non_strike_batter';
         $teamMember->save();
-        // return $teamMember->selected;
+      }
+      else if ($request->bowler_selected) {
+        $teamMember->selected_to = 'bowler_selected';
+        $teamMember->save();
       }
 
     }

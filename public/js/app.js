@@ -101,7 +101,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_js_toggle_button___default.a);
 
 Vue.component('navbar-section', __webpack_require__(44));
 Vue.component('sub-menu', __webpack_require__(50));
-Vue.component('home-page', __webpack_require__(55));
+var HomePage = Vue.component('home-page', __webpack_require__(55));
 var MatchSetup = Vue.component('match-setup', __webpack_require__(60));
 var SettingsSection = Vue.component('settings-section', __webpack_require__(65));
 var TeamsSection = Vue.component('teams-section', __webpack_require__(70));
@@ -114,9 +114,9 @@ var NewBatter = Vue.component('bowler-section', __webpack_require__(100));
 var TeamMembers = Vue.component('bowler-section', __webpack_require__(105));
 
 // router section
-var routes = [{ path: '/teams', components: { 'teams-section': TeamsSection } }, { path: '/teams/:teamA&:teamB', components: { 'teams-member-section': TeamMembers }, props: true }, { path: '/settings/:teamA&:teamB', components: { 'settings-section': SettingsSection } }, { path: '/match-setup/:teamA&:teamB', components: { 'match-setup': MatchSetup } },
+var routes = [{ path: '/teams', components: { 'teams-section': TeamsSection } }, { path: '/team-member/:teamA&:teamB', components: { 'teams-member-section': TeamMembers }, props: true }, { path: '/settings/:teamA&:teamB', components: { 'settings-section': SettingsSection } }, { path: '/match-setup/:teamA&:teamB', components: { 'match-setup': MatchSetup } },
 // { path: '/strike-batter', components:{'strike-batter': StrikeBatter} },
-{ path: '/strike-batter/:teamName&:elected', components: { 'strike-batter': StrikeBatter }, props: true }, { path: '/non-strike-batter/:teamName&:elected&:strikeBatterSelectedToBat', components: { 'non-strike-batter': NonStrikeBatter }, props: true }, { path: '/bowler/:teamB', components: { 'bowler-section': Bowler } }, { path: '/score-sheet', components: { 'score-sheet': ScoreSheet } }, { path: '/wicket', components: { 'wicket-section': Wicket } }, { path: '/new-batter', components: { 'new-batter': NewBatter } }];
+{ path: '/strike-batter/:teamName&:elected', components: { 'strike-batter': StrikeBatter }, props: true }, { path: '/non-strike-batter/:teamName&:elected&:strikeBatterSelectedToBat', components: { 'non-strike-batter': NonStrikeBatter }, props: true }, { path: '/bowler/:teamA&:teamB&:elected', components: { 'bowler-section': Bowler } }, { path: '/score-sheet', components: { 'score-sheet': ScoreSheet } }, { path: '/wicket', components: { 'wicket-section': Wicket } }, { path: '/new-batter', components: { 'new-batter': NewBatter } }];
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
   // mode:'history',
   routes: routes // short for `routes: routes`
@@ -51502,7 +51502,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       elected: '',
       strikeBatterSelectedToBat: '',
       nonStrikeBatterSelectedToBat: '',
-      saveTeamNames: null
+      bowlerSelectedTo: '',
+      saveTeamNames: ''
     };
   },
 
@@ -51510,25 +51511,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     '$route': function $route(to, from) {
       // console.log(to.path);
       // console.log(from.path);
-      if (to.path == '/done' && from.path == '/match-setup/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB) {
-        this.$router.push({ path: '/strike-batter/' + this.teamName + '&' + this.elected });
-      } else if (to.path == '/done' && from.path == '/strike-batter/' + this.teamName + '&' + this.elected) {
-        this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
-      } else if (to.path == '/done' && from.path == '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat) {
-        this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamB });
-      } else if (to.path == '/done' && from.path == '/bowler') {
-        this.$router.push({ path: '/score-sheet' });
-      } else if (to.path == '/done' && from.path == '/wicket') {
-        this.$router.push({ path: '/score-sheet' });
-      } else if (to.path == '/done' && from.path == '/new-batter') {
-        this.$router.push({ path: '/score-sheet' });
-      } else if (to.path == '/new-batter' && from.path == '/score-sheet') {
-        this.$router.push({ path: '/new-batter' });
-      } else if (to.path == '/settings' && from.path == '/teams') {
-        this.$router.push({ path: '/settings' });
-      } else if (to.path == '/match-Setup' && from.path == '/settings') {
-        this.$router.push({ path: '/match-setup/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamA });
+      if (to.path == '/teams' && from.path == '/') {
+        this.$router.push('/teams');
       }
+      // if (to.path == '/team-member' && from.path == '/teams') {
+      //   this.$router.push({path:'/team-member'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB,props:true});
+      // }
+      else if (to.path == '/done' && from.path == '/match-setup/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB) {
+          if (this.elected == 'bowl') {
+            // here saveTeamNames dose not change but i make second item to be First
+            this.$router.push({ path: '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
+          } else if (this.elected == 'bat') {
+            this.$router.push({ path: '/strike-batter/' + this.teamName + '&' + this.elected });
+          }
+        } else if (to.path == '/done' && from.path == '/strike-batter/' + this.teamName == this.saveTeamNames.TeamA ? this.saveTeamNames.TeamA : this.saveTeamNames.TeamB + '&' + this.elected) {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (to.path == '/done' && from.path == '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat) {
+          if (this.elected == 'bowl') {
+            this.$router.push({ path: '/score-sheet' });
+          } else if (this.elected == 'bat') {
+            this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamB });
+          }
+        } else if (to.path == '/done' && from.path == '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected) {
+          if (this.elected == 'bowl') {
+            this.$router.push({ path: '/strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected });
+          } else if (this.elected == 'bat') {
+            this.$router.push({ path: '/score-sheet' });
+          }
+        } else if (to.path == '/done' && from.path == '/wicket') {
+          this.$router.push({ path: '/score-sheet' });
+        } else if (to.path == '/done' && from.path == '/new-batter') {
+          this.$router.push({ path: '/score-sheet' });
+        } else if (to.path == '/new-batter' && from.path == '/score-sheet') {
+          this.$router.push({ path: '/new-batter' });
+        } else if (to.path == '/settings' && from.path == '/teams') {
+          this.$router.push({ path: '/settings' });
+        } else if (to.path == '/match-Setup' && from.path == '/settings') {
+          this.$router.push({ path: '/match-setup/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamA });
+        }
     }
   },
 
@@ -51554,6 +51574,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // console.log(data);
       _this.nonStrikeBatterSelectedToBat = data;
     });
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('bowlerSelectedTo', function (data) {
+      // console.log(data);
+      _this.bowlerSelectedTo = data;
+    });
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('resetMenu', function (data) {
       // console.log(data);
       switch (data) {
@@ -51577,7 +51601,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           break;
         case '/strike-batter':
           changeDefaultMenu = [];
-          changeDefaultMenu.push({ name: 'Select Strike Batter', class: 'active', active: false, routeLink: '/strike-batter' }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
+          changeDefaultMenu.push({ name: 'Select Strike Batter', class: 'active', active: false, routeLink: '/strike-batter/' + _this.$route.params.teamName + '&' + _this.$route.params.elected }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
           _this.menuItems = changeDefaultMenu;
           break;
         case '/non-strike-batter':
@@ -51587,7 +51611,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           break;
         case '/bowler':
           changeDefaultMenu = [];
-          changeDefaultMenu.push({ name: 'Select Bowler', class: 'active', active: false, routeLink: '/bowler' }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
+          changeDefaultMenu.push({ name: 'Select Bowler', class: 'active', active: false, routeLink: '/bowler/' + _this.teamName + '&' + _this.saveTeamNames.TeamA + '&' + _this.elected }, { name: 'Done', class: 'active', active: false, routeLink: '/done' });
           _this.menuItems = changeDefaultMenu;
           break;
         case '/score-sheet':
@@ -51989,6 +52013,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       teamMembers: null
     };
   },
+
+  watch: {
+    pickedTeam: function pickedTeam(value) {
+      if (value == this.$route.params.teamA) {
+        this.teamMembers = {
+          teamA: value,
+          teamB: this.$route.params.teamB
+        };
+      } else if (value == this.$route.params.teamB) {
+        this.teamMembers = {
+          teamA: value,
+          teamB: this.$route.params.teamA
+        };
+      } else {
+        this.teamMembers = {
+          teamA: this.$route.params.teamA,
+          teamB: this.$route.params.teamB
+        };
+      }
+    }
+  },
+
   mounted: function mounted() {
     var _this = this;
 
@@ -52004,18 +52050,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     this.teamMembers = teamNames;
   },
   beforeRouteLeave: function beforeRouteLeave(to, from, next) {
-    if (to.path == '/done' && from.path == '/match-setup/' + this.$route.params.teamA + '&' + this.$route.params.teamB) {
-      // save toss won by and elelted to data to the db
-      axios.post(this.base_url + '/settings', { toss_won_by: this.pickedTeam, elected_to: this.elected }).then(function (res) {
-        // console.log(res.data);
-      }).catch(function (error) {
-        console.log(error.response);
-      });
-      __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('goToStrikeBatter', { team: this.pickedTeam, elected: this.elected });
-      next();
-    } else {
-      next(false);
-    }
+    // save toss won by and elelted to data to the db
+    axios.post(this.base_url + '/settings', { toss_won_by: this.pickedTeam, elected_to: this.elected }).then(function (res) {
+      // console.log(res.data);
+    }).catch(function (error) {
+      console.log(error.response);
+    });
+    __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('goToStrikeBatter', { team: this.teamMembers.teamA, elected: this.elected });
+    next();
   }
 });
 
@@ -53002,7 +53044,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }).catch(function (error) {
         console.log(error.response);
       });
-      this.$router.push({ path: '/teams/' + this.selectTeamA.name + '&' + this.selectTeamB.name, props: true });
+
+      next({ path: '/team-member/' + this.selectTeamA.name + '&' + this.selectTeamB.name, props: true });
     }
   },
   mounted: function mounted() {
@@ -53401,11 +53444,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       base_url: '',
-      elected_to: '',
-      teamName: '',
       strikeBatterSelectedToBat: '',
+      strikeBatterSelectedToBatId: '',
       batterNames: null
     };
+  },
+
+  methods: {
+    strikeBatterId: function strikeBatterId(id) {
+      this.strikeBatterSelectedToBatId = id;
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -53425,6 +53473,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   beforeRouteLeave: function beforeRouteLeave(to, from, next) {
     if (to.path == '/done' && from.path == '/strike-batter/' + this.$route.params.teamName + '&' + this.$route.params.elected) {
       __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('strikeBatterSelectedToBat', this.strikeBatterSelectedToBat);
+      // update the strikeBatterSelectedToBat data in the team_members table
+      axios({
+        method: 'put',
+        url: this.base_url + '/team-member/' + this.strikeBatterSelectedToBatId,
+        data: {
+          strike_batter: this.strikeBatterSelectedToBat
+        },
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }).then(function (res) {
+        console.log(res.data);
+      }).catch(function (err) {
+        console.log(err.response);
+      });
       next();
     } else {
       next(false);
@@ -53485,6 +53548,9 @@ var render = function() {
                       )
                     },
                     on: {
+                      click: function($event) {
+                        _vm.strikeBatterId(item.id)
+                      },
                       change: function($event) {
                         _vm.strikeBatterSelectedToBat = item.member_name
                       }
@@ -53630,8 +53696,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       base_url: '',
       nonStrikeBatterNames: null,
-      nonStrikeBatterSelectedToBat: ''
+      nonStrikeBatterSelectedToBat: '',
+      nonStrikeBatterSelectedToBatId: ''
     };
+  },
+
+  methods: {
+    nonStrikeBatterId: function nonStrikeBatterId(id) {
+      this.nonStrikeBatterSelectedToBatId = id;
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -53651,6 +53724,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   beforeRouteLeave: function beforeRouteLeave(to, from, next) {
     if (to.path == '/done' && from.path == '/non-strike-batter/' + this.$route.params.teamName + '&' + this.$route.params.elected + '&' + this.$route.params.strikeBatterSelectedToBat) {
       __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('nonStrikeBatterSelectedToBat', this.nonStrikeBatterSelectedToBat);
+      // update the strikeBatterSelectedToBat data in the team_members table
+      axios({
+        method: 'put',
+        url: this.base_url + '/team-member/' + this.nonStrikeBatterSelectedToBatId,
+        data: {
+          non_strike_batter: this.nonStrikeBatterSelectedToBat
+        },
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }).then(function (res) {
+        console.log(res.data);
+      }).catch(function (err) {
+        console.log(err.response);
+      });
       next();
     } else {
       next(false);
@@ -53712,6 +53800,9 @@ var render = function() {
                       )
                     },
                     on: {
+                      click: function($event) {
+                        _vm.nonStrikeBatterId(item.id)
+                      },
                       change: function($event) {
                         _vm.nonStrikeBatterSelectedToBat = item.member_name
                       }
@@ -53855,15 +53946,55 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      pickedName: '',
-      BowlerNames: [{ name: 'name 1', class: 'active', active: false }, { name: 'name 2', class: 'active', active: false }, { name: 'name 3', class: 'active', active: false }, { name: 'name 4', class: 'active', active: false }, { name: 'name 5', class: 'active', active: false }, { name: 'name 6', class: 'active', active: false }, { name: 'name 7', class: 'active', active: false }]
+      base_url: '',
+      bowlerNames: null,
+      bowlerSelectedTo: '',
+      bowlerSelectedToId: ''
     };
   },
+
+  methods: {
+    bowlerId: function bowlerId(id) {
+      this.bowlerSelectedToId = id;
+    }
+  },
   mounted: function mounted() {
+    var _this = this;
+
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/bowler');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
-      console.log(data);
+      _this.base_url = data;
     });
+    // now to get the team_members for the toss_won_by team
+    axios.get(this.base_url + '/team-member/' + this.$route.params.teamA).then(function (res) {
+      // console.log(res.data);
+      _this.bowlerNames = res.data;
+    }).catch(function (err) {
+      console.log(err.response);
+    });
+  },
+  beforeRouteLeave: function beforeRouteLeave(to, from, next) {
+    if (to.path == '/done' && from.path == '/bowler/' + this.$route.params.teamA + '&' + this.$route.params.teamB + '&' + this.$route.params.elected) {
+      __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('bowlerSelectedTo', this.bowlerSelectedTo);
+      // update the strikeBatterSelectedToBat data in the team_members table
+      axios({
+        method: 'put',
+        url: this.base_url + '/team-member/' + this.bowlerSelectedToId,
+        data: {
+          bowler_selected: this.bowlerSelectedTo
+        },
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      }).then(function (res) {
+        console.log(res.data);
+      }).catch(function (err) {
+        console.log(err.response);
+      });
+      next();
+    } else {
+      next(false);
+    }
   }
 });
 
@@ -53879,47 +54010,56 @@ var render = function() {
     _c(
       "ul",
       { staticClass: "list-group" },
-      _vm._l(_vm.BowlerNames, function(item, index) {
-        return _c("li", { key: item.name, staticClass: "list-group-item" }, [
-          _c("div", { staticClass: "form-check" }, [
-            _c(
-              "label",
-              {
-                staticClass: "form-check-label",
-                attrs: { for: item.name.replace(" ", "") }
-              },
-              [_vm._v("\n          " + _vm._s(item.name) + "\n        ")]
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "button" }, [
-              _c("input", {
-                directives: [
+      _vm._l(_vm.bowlerNames, function(item, index) {
+        return item.selected == 1 && item.member_name
+          ? _c("li", { key: index, staticClass: "list-group-item" }, [
+              _c("div", { staticClass: "form-check" }, [
+                _c(
+                  "label",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.pickedName,
-                    expression: "pickedName"
-                  }
-                ],
-                staticClass: "form-check-input",
-                attrs: {
-                  type: "radio",
-                  id: item.name.replace(" ", ""),
-                  name: item.name.replace(" ", "")
-                },
-                domProps: {
-                  value: item.name.replace(" ", ""),
-                  checked: _vm._q(_vm.pickedName, item.name.replace(" ", ""))
-                },
-                on: {
-                  change: function($event) {
-                    _vm.pickedName = item.name.replace(" ", "")
-                  }
-                }
-              })
+                    staticClass: "form-check-label",
+                    attrs: { for: item.member_name }
+                  },
+                  [
+                    _vm._v(
+                      "\n          " + _vm._s(item.member_name) + "\n        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "button" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.bowlerSelectedTo,
+                        expression: "bowlerSelectedTo"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      id: item.member_name,
+                      name: item.member_name
+                    },
+                    domProps: {
+                      value: item.member_name,
+                      checked: _vm._q(_vm.bowlerSelectedTo, item.member_name)
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.bowlerId(item.id)
+                      },
+                      change: function($event) {
+                        _vm.bowlerSelectedTo = item.member_name
+                      }
+                    }
+                  })
+                ])
+              ])
             ])
-          ])
-        ])
+          : _vm._e()
       })
     )
   ])

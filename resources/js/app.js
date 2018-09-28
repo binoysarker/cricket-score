@@ -27,7 +27,7 @@ Vue.use(ToggleButton);
 
 Vue.component('navbar-section', require('./components/CricketScore/partials/Navbar.vue'));
 Vue.component('sub-menu', require('./components/CricketScore/partials/SubNav.vue'));
-Vue.component('home-page', require('./components/CricketScore/HomePage.vue'));
+const HomePage =Vue.component('home-page', require('./components/CricketScore/HomePage.vue'));
 const MatchSetup = Vue.component('match-setup', require('./components/CricketScore/MatchSetup.vue'));
 const SettingsSection = Vue.component('settings-section', require('./components/CricketScore/SettingsSection.vue'));
 const TeamsSection = Vue.component('teams-section', require('./components/CricketScore/TeamsSection.vue'));
@@ -42,13 +42,13 @@ const TeamMembers = Vue.component('bowler-section', require('./components/Cricke
 // router section
 const routes = [
   { path: '/teams', components:{'teams-section': TeamsSection} },
-  { path: '/teams/:teamA&:teamB', components:{'teams-member-section': TeamMembers},props:true },
+  { path: '/team-member/:teamA&:teamB', components:{'teams-member-section': TeamMembers},props:true },
   { path: '/settings/:teamA&:teamB', components:{'settings-section': SettingsSection} },
   { path: '/match-setup/:teamA&:teamB', components:{'match-setup': MatchSetup} },
   // { path: '/strike-batter', components:{'strike-batter': StrikeBatter} },
   { path: '/strike-batter/:teamName&:elected', components:{'strike-batter': StrikeBatter},props:true },
   { path: '/non-strike-batter/:teamName&:elected&:strikeBatterSelectedToBat', components:{'non-strike-batter': NonStrikeBatter},props:true },
-  { path: '/bowler/:teamB', components:{'bowler-section': Bowler} },
+  { path: '/bowler/:teamA&:teamB&:elected', components:{'bowler-section': Bowler} },
   { path: '/score-sheet', components:{'score-sheet': ScoreSheet} },
   { path: '/wicket', components:{'wicket-section': Wicket} },
   { path: '/new-batter', components:{'new-batter': NewBatter} },

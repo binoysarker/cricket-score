@@ -53,6 +53,27 @@ export default {
       teamMembers:null,
     }
   },
+  watch:{
+    pickedTeam(value){
+      if (value == this.$route.params.teamA) {
+        this.teamMembers = {
+          teamA: value,
+          teamB: this.$route.params.teamB
+        };
+      }else if (value == this.$route.params.teamB) {
+        this.teamMembers = {
+          teamA: value,
+          teamB: this.$route.params.teamA
+        };
+      }
+      else {
+        this.teamMembers = {
+          teamA: this.$route.params.teamA,
+          teamB: this.$route.params.teamB
+        };
+      }
+    }
+  },
 
   mounted(){
     bus.$emit('saveTeamNames',{TeamA:this.$route.params.teamA,TeamB:this.$route.params.teamB});
@@ -61,25 +82,21 @@ export default {
       this.base_url = data;
     });
     let teamNames = {
-      teamA:this.$route.params.teamA,
+      teamA: this.$route.params.teamA,
       teamB:this.$route.params.teamB
     };
     this.teamMembers = teamNames;
 
   },
   beforeRouteLeave (to, from, next){
-    if (to.path == '/done' && from.path == '/match-setup/'+this.$route.params.teamA+'&'+this.$route.params.teamB) {
-      // save toss won by and elelted to data to the db
-      axios.post(this.base_url+'/settings',{toss_won_by:this.pickedTeam,elected_to:this.elected})
-      .then((res)=>{
-        // console.log(res.data);
-      })
-      .catch((error)=>{console.log(error.response);}) ;
-      bus.$emit('goToStrikeBatter',{team:this.pickedTeam,elected:this.elected});
-      next();
-    }else {
-      next(false);
-    }
+    // save toss won by and elelted to data to the db
+    axios.post(this.base_url+'/settings',{toss_won_by:this.pickedTeam,elected_to:this.elected})
+    .then((res)=>{
+      // console.log(res.data);
+    })
+    .catch((error)=>{console.log(error.response);}) ;
+    bus.$emit('goToStrikeBatter',{team:this.teamMembers.teamA,elected:this.elected});
+    next();
   },
 
 }

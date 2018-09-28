@@ -19,24 +19,45 @@ export default {
       elected:'',
       strikeBatterSelectedToBat:'',
       nonStrikeBatterSelectedToBat:'',
-      saveTeamNames:null,
+      bowlerSelectedTo:'',
+      saveTeamNames:'',
     }
   },
   watch:{
     '$route'(to,from){
       // console.log(to.path);
       // console.log(from.path);
-      if (to.path == '/done' && from.path == '/match-setup/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB) {
-        this.$router.push({path:'/strike-batter/'+this.teamName+'&'+this.elected});
+      if (to.path == '/teams' && from.path == '/') {
+        this.$router.push('/teams');
       }
-      else if (to.path == '/done' && from.path == '/strike-batter/'+this.teamName+'&'+this.elected) {
-        this.$router.push({path:'/non-strike-batter/'+this.teamName+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
+      // if (to.path == '/team-member' && from.path == '/teams') {
+      //   this.$router.push({path:'/team-member'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB,props:true});
+      // }
+      else if (to.path == '/done' && from.path == '/match-setup/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB) {
+        if (this.elected == 'bowl') {
+          // here saveTeamNames dose not change but i make second item to be First
+          this.$router.push({path:'/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
+        }else if(this.elected == 'bat'){
+          this.$router.push({path:'/strike-batter/'+this.teamName+'&'+this.elected});
+        }
       }
-      else if (to.path == '/done' && from.path == '/non-strike-batter/'+this.teamName+'&'+this.elected+'&'+this.strikeBatterSelectedToBat) {
-        this.$router.push({path:'/bowler/'+this.saveTeamNames.TeamB});
+      else if (to.path == '/done' && from.path == '/strike-batter/'+this.teamName == this.saveTeamNames.TeamA ? this.saveTeamNames.TeamA : this.saveTeamNames.TeamB+'&'+this.elected) {
+        this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
       }
-      else if (to.path == '/done' && from.path == '/bowler') {
-        this.$router.push({path:'/score-sheet'});
+      else if (to.path == '/done' && from.path == '/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat) {
+        if (this.elected == 'bowl') {
+          this.$router.push({path:'/score-sheet'});
+        }
+        else if (this.elected == 'bat') {
+          this.$router.push({path:'/bowler/'+this.saveTeamNames.TeamB});
+        }
+      }
+      else if (to.path == '/done' && from.path == '/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected) {
+        if (this.elected == 'bowl') {
+          this.$router.push({path:'/strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected});
+        }else if (this.elected == 'bat') {
+          this.$router.push({path:'/score-sheet'});
+        }
       }
       else if (to.path == '/done' && from.path == '/wicket') {
         this.$router.push({path:'/score-sheet'});
@@ -84,6 +105,10 @@ export default {
       // console.log(data);
       this.nonStrikeBatterSelectedToBat = data;
     });
+    bus.$on('bowlerSelectedTo',(data)=>{
+      // console.log(data);
+      this.bowlerSelectedTo = data;
+    });
     bus.$on('resetMenu',(data)=>{
       // console.log(data);
       switch (data) {
@@ -119,7 +144,7 @@ export default {
         break;
         case '/strike-batter':
         changeDefaultMenu = [];
-        changeDefaultMenu.push({name:'Select Strike Batter',class:'active',active:false,routeLink:'/strike-batter'},
+        changeDefaultMenu.push({name:'Select Strike Batter',class:'active',active:false,routeLink:'/strike-batter/'+this.$route.params.teamName+'&'+this.$route.params.elected},
         {name:'Done',class:'active',active:false,routeLink:'/done'});
         this.menuItems = changeDefaultMenu;
         break;
@@ -131,7 +156,7 @@ export default {
         break;
         case '/bowler':
         changeDefaultMenu = [];
-        changeDefaultMenu.push({name:'Select Bowler',class:'active',active:false,routeLink:'/bowler'},
+        changeDefaultMenu.push({name:'Select Bowler',class:'active',active:false,routeLink:'/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected},
         {name:'Done',class:'active',active:false,routeLink:'/done'});
         this.menuItems = changeDefaultMenu;
         break;

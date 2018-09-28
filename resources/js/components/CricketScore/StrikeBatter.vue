@@ -7,7 +7,7 @@
             {{item.member_name}}
           </label>
           <span class="button">
-            <input class="form-check-input" type="radio" :id="item.member_name" :name="item.member_name" :value="item.member_name" v-model="strikeBatterSelectedToBat">
+            <input class="form-check-input" type="radio" :id="item.member_name" :name="item.member_name" :value="item.member_name" v-model="strikeBatterSelectedToBat" @click="strikeBatterId(item.id)">
           </span>
         </div>
       </li>
@@ -21,10 +21,14 @@ export default {
   data(){
     return {
       base_url:'',
-      elected_to:'',
-      teamName:'',
       strikeBatterSelectedToBat:'',
+      strikeBatterSelectedToBatId:'',
       batterNames:null,
+    }
+  },
+  methods:{
+    strikeBatterId(id){
+      this.strikeBatterSelectedToBatId = id;
     }
   },
   mounted(){
@@ -44,6 +48,22 @@ export default {
   beforeRouteLeave (to, from, next){
     if (to.path == '/done' && from.path == '/strike-batter/'+this.$route.params.teamName+'&'+this.$route.params.elected) {
       bus.$emit('strikeBatterSelectedToBat',this.strikeBatterSelectedToBat);
+      // update the strikeBatterSelectedToBat data in the team_members table
+      axios({
+        method: 'put',
+        url: this.base_url+'/team-member/'+this.strikeBatterSelectedToBatId,
+        data: {
+          strike_batter:this.strikeBatterSelectedToBat
+        },
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      })
+      .then((res)=>{
+        console.log(res.data);
+
+      })
+      .catch((err)=>{console.log(err.response);});
       next();
     }else {
       next(false);
