@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\TeamMember;
 use App\Models\Team;
+use App\Models\Batting;
+use App\Models\Bowling;
 use Illuminate\Http\Request;
 
 class TeamMemberController extends Controller
@@ -134,14 +136,35 @@ class TeamMemberController extends Controller
       else if ($request->strike_batter) {
         $teamMember->selected_to = 'strike_batter';
         $teamMember->save();
+        // also save these data in the battings table
+        $batting = new Batting();
+        $batting->user_id = $teamMember->user_id;
+        $batting->team_id = $teamMember->team_id;
+        $batting->team_member_id = $teamMember->id;
+        $batting->strike_batter = 1;
+        $batting->save();
       }
       else if ($request->non_strike_batter) {
         $teamMember->selected_to = 'non_strike_batter';
         $teamMember->save();
+        // also save these data in the battings table
+        $batting = new Batting();
+        $batting->user_id = $teamMember->user_id;
+        $batting->team_id = $teamMember->team_id;
+        $batting->team_member_id = $teamMember->id;
+        $batting->non_strike_batter = 1;
+        $batting->save();
       }
       else if ($request->bowler_selected) {
         $teamMember->selected_to = 'bowler_selected';
         $teamMember->save();
+        // also save these data in the battings table
+        $batting = new Bowling();
+        $batting->user_id = $teamMember->user_id;
+        $batting->team_id = $teamMember->team_id;
+        $batting->team_member_id = $teamMember->id;
+        $batting->bowler = 1;
+        $batting->save();
       }
 
     }

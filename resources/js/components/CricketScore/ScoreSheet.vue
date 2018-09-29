@@ -4,18 +4,18 @@
     <div class="teamScore">
       <div class="customImage">
         <div class="circle1"></div>
-        <div class="text1">WC</div>
+        <div class="text1">{{teamAName | getLogoTitle}}</div>
       </div>
-      <span class="Name">WarWickshirn CCC</span>
+      <span class="Name">{{teamAName}}</span>
       <span class="Score">12/0</span>
     </div>
     <div class="teamScore">
       <div class="customImage">
         <div class="circle2"></div>
-        <div class="text2">WC</div>
+        <div class="text2">{{teamBName | getLogoTitle}}</div>
       </div>
-      <span class="Name">Surrey CCC</span>
-      <span class="Score"></span>
+      <span class="Name">{{teamBName}}</span>
+      <span class="Score">   </span>
     </div>
     <!-- score detail section -->
     <div class="card" >
@@ -231,6 +231,8 @@ import {bus} from '../../app';
 export default {
   data(){
     return {
+      teamAName: this.$route.params.teamA,
+      teamBName: this.$route.params.teamB,
       showModal:false,
       buttonImagesRow1:[
         {id:1,location:'/image/empty-circle.jpg',active:false},
@@ -253,6 +255,16 @@ export default {
         {id:4,location:'/image/button-black.jpg',active:false},
         {id:5,location:'/image/button-wicket.jpg',active:false},
       ]
+    }
+  },
+  filters:{
+    getLogoTitle(value){
+      if (value) {
+        let str = _.startCase(_.toLower(value));
+        let matches = str.match(/\b(\w)/g);
+        let achronym = matches.join(' ');
+        return achronym;
+      }
     }
   },
   watch:{

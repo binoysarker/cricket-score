@@ -51763,7 +51763,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n.bg-change[data-v-5a0ff601]{\n  background-color: #235594;\n}\n.nav[data-v-5a0ff601]{\n  font-weight: bold;\n  font-size: 15px;\n}\n.nav-link[data-v-5a0ff601]{\n  color: white;\n}\n.nav-link[data-v-5a0ff601]:hover{\n  color: black;\n}\n.active[data-v-5a0ff601]{\n  color: white;\n  font-weight: bold;\n}\n.router-link-active[data-v-5a0ff601]{\n  font-size: 18px;\n  font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Enter and leave animations can use different */\n/* durations and timing functions.              */\n.slide-fade-enter-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s ease;\n  transition: all .3s ease;\n}\n.slide-fade-leave-active[data-v-5a0ff601] {\n  -webkit-transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);\n}\n.slide-fade-enter[data-v-5a0ff601], .slide-fade-leave-to[data-v-5a0ff601]\n/* .slide-fade-leave-active below version 2.1.8 */ {\n  -webkit-transform: translateX(100px);\n          transform: translateX(100px);\n  opacity: 0;\n}\n.bg-change[data-v-5a0ff601]{\n  background-color: #235594;\n}\n.nav[data-v-5a0ff601]{\n  font-weight: bold;\n  font-size: 15px;\n}\n.nav-link[data-v-5a0ff601]{\n  color: white;\n}\n.nav-link[data-v-5a0ff601]:hover{\n  color: black;\n}\n.active[data-v-5a0ff601]{\n  color: white;\n  font-weight: bold;\n}\n.router-link-active[data-v-5a0ff601]{\n  font-size: 18px;\n  font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -51845,7 +51845,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         if (this.elected == 'bowl') {
           this.$router.push({ path: '/strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected });
         } else if (this.elected == 'bat') {
-          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+          this.$router.push({ path: '/score-sheet/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
         }
       } else if (to.path == '/done' && from.path == '/strike-batter/' + this.teamName + '&' + this.elected) {
         if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
@@ -51853,8 +51853,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
           this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          // console.log('testing '+this.saveTeamNames.TeamA);
           this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else {
+          // console.log('testing else '+this.saveTeamNames.TeamA);
           this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         }
       } else if (to.path == '/done' && from.path == '/strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected) {
@@ -51862,6 +51864,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
           this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+        } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else {
           this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         }
@@ -51871,7 +51875,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
           this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
-          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamB + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
+          this.$router.push({ path: '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         } else {
           this.$router.push({ path: '/non-strike-batter/' + this.teamName + '&' + this.elected + '&' + this.strikeBatterSelectedToBat });
         }
@@ -51881,7 +51885,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
           this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
         } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
-          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamB + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+          this.$router.push({ path: '/score-sheet/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
         } else {
           this.$router.push({ path: '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
         }
@@ -51889,6 +51893,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
           this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
         } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+        } else {
+          this.$router.push({ path: '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
+        }
+      } else if (to.path == '/done' && from.path == '/non-strike-batter/' + this.saveTeamNames.TeamA + '&' + this.elected + '&' + this.strikeBatterSelectedToBat) {
+        if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
+          this.$router.push({ path: '/bowler/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+        } else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+          this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
+        } else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
           this.$router.push({ path: '/score-sheet/' + this.saveTeamNames.TeamA + '&' + this.saveTeamNames.TeamB + '&' + this.elected });
         } else {
           this.$router.push({ path: '/bowler/' + this.teamName + '&' + this.saveTeamNames.TeamA + '&' + this.elected });
@@ -54613,6 +54627,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      teamAName: this.$route.params.teamA,
+      teamBName: this.$route.params.teamB,
       showModal: false,
       buttonImagesRow1: [{ id: 1, location: '/image/empty-circle.jpg', active: false }, { id: 2, location: '/image/button-one.jpg', active: false }, { id: 3, location: '/image/button-two.jpg', active: false }, { id: 4, location: '/image/button-three.jpg', active: false }, { id: 5, location: '/image/button-fill.jpg', active: false }],
       buttonImagesRow2: [{ id: 1, location: '/image/button-four.jpg', active: false }, { id: 2, location: '/image/button-six.jpg', active: false }, { id: 3, location: '/image/button-five.jpg', active: false }, { id: 4, location: '/image/empty-circle.jpg', active: false }, { id: 5, location: '/image/button-action.jpg', active: false }],
@@ -54620,6 +54636,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
 
+  filters: {
+    getLogoTitle: function getLogoTitle(value) {
+      if (value) {
+        var str = _.startCase(_.toLower(value));
+        var matches = str.match(/\b(\w)/g);
+        var achronym = matches.join(' ');
+        return achronym;
+      }
+    }
+  },
   watch: {
     showModal: function showModal(value) {
       if (value) {
@@ -54655,14 +54681,38 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("section", { staticClass: "ScoreSheet" }, [
+    _c("div", { staticClass: "teamScore" }, [
+      _c("div", { staticClass: "customImage" }, [
+        _c("div", { staticClass: "circle1" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "text1" }, [
+          _vm._v(_vm._s(_vm._f("getLogoTitle")(_vm.teamAName)))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("span", { staticClass: "Name" }, [_vm._v(_vm._s(_vm.teamAName))]),
+      _vm._v(" "),
+      _c("span", { staticClass: "Score" }, [_vm._v("12/0")])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "teamScore" }, [
+      _c("div", { staticClass: "customImage" }, [
+        _c("div", { staticClass: "circle2" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "text2" }, [
+          _vm._v(_vm._s(_vm._f("getLogoTitle")(_vm.teamBName)))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("span", { staticClass: "Name" }, [_vm._v(_vm._s(_vm.teamBName))]),
+      _vm._v(" "),
+      _c("span", { staticClass: "Score" })
+    ]),
+    _vm._v(" "),
     _vm._m(0),
     _vm._v(" "),
-    _vm._m(1),
-    _vm._v(" "),
-    _vm._m(2),
-    _vm._v(" "),
     _c("div", { staticClass: "container buttonSection" }, [
-      _vm._m(3),
+      _vm._m(1),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("table", { staticClass: "table table-borderless table-sm" }, [
@@ -54725,9 +54775,9 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(4),
+              _vm._m(2),
               _vm._v(" "),
-              _vm._m(5),
+              _vm._m(3),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
                 _c(
@@ -54761,38 +54811,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "teamScore" }, [
-      _c("div", { staticClass: "customImage" }, [
-        _c("div", { staticClass: "circle1" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "text1" }, [_vm._v("WC")])
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "Name" }, [_vm._v("WarWickshirn CCC")]),
-      _vm._v(" "),
-      _c("span", { staticClass: "Score" }, [_vm._v("12/0")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "teamScore" }, [
-      _c("div", { staticClass: "customImage" }, [
-        _c("div", { staticClass: "circle2" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "text2" }, [_vm._v("WC")])
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "Name" }, [_vm._v("Surrey CCC")]),
-      _vm._v(" "),
-      _c("span", { staticClass: "Score" })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

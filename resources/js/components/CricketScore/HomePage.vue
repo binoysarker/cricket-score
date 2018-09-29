@@ -72,7 +72,7 @@ import {bus} from '../../app';
             if (this.elected == 'bowl') {
               this.$router.push({path:'/strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected});
             }else if (this.elected == 'bat') {
-              this.$router.push({path:'/score-sheet/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB+'&'+this.elected});
+              this.$router.push({path:'/score-sheet/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
             }
           }
           else if (to.path == '/done' && from.path == '/strike-batter/'+this.teamName+'&'+this.elected) {
@@ -83,9 +83,11 @@ import {bus} from '../../app';
               this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamB+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
             }
             else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+              // console.log('testing '+this.saveTeamNames.TeamA);
               this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
             }
             else {
+              // console.log('testing else '+this.saveTeamNames.TeamA);
               this.$router.push({path:'/non-strike-batter/'+this.teamName+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
             }
           }
@@ -95,6 +97,9 @@ import {bus} from '../../app';
             }
             else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
               this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamB+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
+            }
+            else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+              this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
             }
             else {
               this.$router.push({path:'/non-strike-batter/'+this.teamName+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
@@ -108,7 +113,7 @@ import {bus} from '../../app';
               this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamB+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
             }
             else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
-              this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamB+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
+              this.$router.push({path:'/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
             }
             else {
               this.$router.push({path:'/non-strike-batter/'+this.teamName+'&'+this.elected+'&'+this.strikeBatterSelectedToBat});
@@ -122,7 +127,7 @@ import {bus} from '../../app';
               this.$router.push({path:'/score-sheet/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB+'&'+this.elected});
             }
             else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
-              this.$router.push({path:'/score-sheet/'+this.saveTeamNames.TeamB+'&'+this.saveTeamNames.TeamB+'&'+this.elected});
+              this.$router.push({path:'/score-sheet/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
             }
             else {
               this.$router.push({path:'/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
@@ -139,10 +144,24 @@ import {bus} from '../../app';
               this.$router.push({path:'/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
             }
           }
+          else if (to.path == '/done' && from.path == '/non-strike-batter/'+this.saveTeamNames.TeamA+'&'+this.elected+'&'+this.strikeBatterSelectedToBat) {
+            if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bat') {
+              this.$router.push({path:'/bowler/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB+'&'+this.elected});
+            }
+            else if (this.teamName == this.saveTeamNames.TeamA && this.elected == 'bowl') {
+              this.$router.push({path:'/score-sheet/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB+'&'+this.elected});
+            }
+            else if (this.teamName != this.saveTeamNames.TeamA && this.elected == 'bowl') {
+              this.$router.push({path:'/score-sheet/'+this.saveTeamNames.TeamA+'&'+this.saveTeamNames.TeamB+'&'+this.elected});
+            }
+            else {
+              this.$router.push({path:'/bowler/'+this.teamName+'&'+this.saveTeamNames.TeamA+'&'+this.elected});
+            }
+          }
 
         }
       },
-      
+
       created(){
         let defaultMenu = [
           {name:'Teams',class:'active',active:false,routeLink:'/teams'},
