@@ -8,7 +8,7 @@
       </div>
       <br>
       <!-- /alert section -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1" >
         Select Team Members
       </button>
       <br>
@@ -56,7 +56,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary"  data-dismiss="modal">Save Team Members</button>
+            <button type="button" class="btn btn-primary"  data-dismiss="modal" @click="reloadPage()">Save Team Members</button>
           </div>
         </div>
       </div>
@@ -129,7 +129,9 @@ export default {
     },
   },
   methods:{
-
+    reloadPage(){
+      location.reload();
+    },
     saveEditTeamData(){
       if (this.editTeam == this.$route.params.teamA) {
         axios.post(this.base_url+'/team-member',{member_name:this.teamMemberName,team_name:this.$route.params.teamA})
@@ -142,7 +144,7 @@ export default {
             // console.log(res.data);
             // this.batterNames = res.data;
           }
-          location.reload();
+          // location.reload();
         })
         .catch((err)=>{console.log(err.response);});
       }else if (this.editTeam == this.$route.params.teamB) {
@@ -166,7 +168,7 @@ export default {
         method: 'put',
         url: this.base_url+'/team-member/'+item.id,
         data: {
-          picked_names:item.member_name
+          picked_name:item.member_name
         },
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

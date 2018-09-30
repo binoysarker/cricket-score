@@ -40,26 +40,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="name">Batter 1</td>
-                <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td class="name">Batter 2</td>
-                <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td>PARTNERSHIP</td>
-                <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td>0</td>
+              <tr v-for="(item,index) in modifiedBatsmenInfo" :key="index">
+                <td class="name">{{item.name}}</td>
+                <td>{{item.runs}}</td>
+                <td>{{item.balls}}</td>
+                <td>{{item.fours}}</td>
+                <td>{{item.sixes}}</td>
+
               </tr>
             </tbody>
             <!-- /fot batters section -->
@@ -74,19 +61,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="name">bowler 1</td>
-                <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td class="name">bowler 2</td>
-                <td>4</td>
-                <td>4</td>
-                <td>0</td>
-                <td>0</td>
+              <tr >
+                <td class="name">{{modifiedBowlerInfo.name}}</td>
+                <td >{{modifiedBowlerInfo.overs}}</td>
+                <td >{{modifiedBowlerInfo.maiden_overs}}</td>
+                <td >{{modifiedBowlerInfo.runs_given}}</td>
+                <td >{{modifiedBowlerInfo.wicket_taken}}</td>
               </tr>
             </tbody>
             <!-- /fot bowlers section -->
@@ -190,10 +170,7 @@
     </div>
     <!-- /button section -->
     <!-- modal section -->
-    <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Launch demo modal
-</button> -->
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -231,8 +208,15 @@ import {bus} from '../../app';
 export default {
   data(){
     return {
+      someObject:[],
+      base_url:'',
       teamAName: this.$route.params.teamA,
       teamBName: this.$route.params.teamB,
+      batsmenInfo:'',
+      bowlersInfo:'',
+      batsmanOneName:'',
+      batsmanTwoName:'',
+      bowlerName:'',
       showModal:false,
       buttonImagesRow1:[
         {id:1,location:'/image/empty-circle.jpg',active:false},
@@ -255,6 +239,17 @@ export default {
         {id:4,location:'/image/button-black.jpg',active:false},
         {id:5,location:'/image/button-wicket.jpg',active:false},
       ]
+    }
+  },
+  computed:{
+    modifiedBatsmenInfo(){
+      _.assign(this.batsmenInfo[0],{name:this.batsmanOneName});
+      _.assign(this.batsmenInfo[1],{name:this.batsmanTwoName});
+      return this.batsmenInfo;
+    },
+    modifiedBowlerInfo(){
+      _.assign(this.bowlersInfo,{name:this.bowlerName});
+      return this.bowlersInfo;
     }
   },
   filters:{
@@ -288,8 +283,44 @@ export default {
   mounted(){
     bus.$emit('resetMenu','/score-sheet');
     bus.$on('base_url',(data)=>{
-      console.log(data);
+      this.base_url = data;
     });
+    // now get only battings table info
+    axios.get(this.base_url+'/battings')
+    .then((res)=>{
+      // console.log(res.data);
+      let newbatsmenInfo = res.data;
+      this.batsmenInfo = res.data;
+    })
+    .catch((err)=>{console.log(err.response);});
+
+    // now get only bowlers table info
+    axios.get(this.base_url+'/bowlings')
+    .then((res)=>{
+      // console.log(res.data);
+      this.bowlersInfo = res.data;
+    })
+    .catch((err)=>{console.log(err.response);});
+
+
+    // now get team member info related to batters from the battings table
+    axios.get(this.base_url+'/battings/get-batting-team-members')
+    .then((res)=>{
+      // console.log(res.data);
+      this.batsmanOneName = res.data[0].member_name;
+      this.batsmanTwoName = res.data[1].member_name;
+
+    })
+    .catch((err)=>{console.log(err.response);});
+
+
+    // now get all the team, team member info related to bowlers from the bowllings table
+    axios.get(this.base_url+'/bowlings/get-bowling-team-members')
+    .then((res)=>{
+      // console.log(res.data);
+      this.bowlerName = res.data.member_name;
+    })
+    .catch((err)=>{console.log(err.response);});
   },
 }
 </script>

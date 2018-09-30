@@ -122,7 +122,9 @@ class TeamMemberController extends Controller
      */
     public function update(Request $request, TeamMember $teamMember)
     {
-      if ($request->picked_name) {
+      // return $request;
+      if (isset($request->picked_name)) {
+        // return $teamMember;
         if ($teamMember->selected == 0) {
           $teamMember->selected = 1;
           $teamMember->save();

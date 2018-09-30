@@ -14,8 +14,24 @@ class BowlingController extends Controller
      */
     public function index()
     {
-        //
+      // get the last two rows from the battings table
+      $bowling = Bowling::orderBy('id','desc')->first();
+      return $bowling;
     }
+    /**
+     * getBowlingTeamMembers
+     */
+     public function getBowlingTeamMembers()
+     {
+       // get the last row from the bowllings table
+       $bowling = Bowling::orderBy('id','desc')->first();
+
+       // foreach ($bowling as $value) {
+       //   $teamMembers[] = $value->teamMember;
+       // }
+       return $bowling->teamMember;
+
+     }
 
     /**
      * Show the form for creating a new resource.

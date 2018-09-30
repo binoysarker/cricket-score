@@ -54599,36 +54599,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      someObject: [],
+      base_url: '',
       teamAName: this.$route.params.teamA,
       teamBName: this.$route.params.teamB,
+      batsmenInfo: '',
+      bowlersInfo: '',
+      batsmanOneName: '',
+      batsmanTwoName: '',
+      bowlerName: '',
       showModal: false,
       buttonImagesRow1: [{ id: 1, location: '/image/empty-circle.jpg', active: false }, { id: 2, location: '/image/button-one.jpg', active: false }, { id: 3, location: '/image/button-two.jpg', active: false }, { id: 4, location: '/image/button-three.jpg', active: false }, { id: 5, location: '/image/button-fill.jpg', active: false }],
       buttonImagesRow2: [{ id: 1, location: '/image/button-four.jpg', active: false }, { id: 2, location: '/image/button-six.jpg', active: false }, { id: 3, location: '/image/button-five.jpg', active: false }, { id: 4, location: '/image/empty-circle.jpg', active: false }, { id: 5, location: '/image/button-action.jpg', active: false }],
@@ -54636,6 +54620,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
 
+  computed: {
+    modifiedBatsmenInfo: function modifiedBatsmenInfo() {
+      _.assign(this.batsmenInfo[0], { name: this.batsmanOneName });
+      _.assign(this.batsmenInfo[1], { name: this.batsmanTwoName });
+      return this.batsmenInfo;
+    },
+    modifiedBowlerInfo: function modifiedBowlerInfo() {
+      _.assign(this.bowlersInfo, { name: this.bowlerName });
+      return this.bowlersInfo;
+    }
+  },
   filters: {
     getLogoTitle: function getLogoTitle(value) {
       if (value) {
@@ -54665,9 +54660,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   mounted: function mounted() {
+    var _this = this;
+
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$emit('resetMenu', '/score-sheet');
     __WEBPACK_IMPORTED_MODULE_0__app__["bus"].$on('base_url', function (data) {
-      console.log(data);
+      _this.base_url = data;
+    });
+    // now get only battings table info
+    axios.get(this.base_url + '/battings').then(function (res) {
+      // console.log(res.data);
+      var newbatsmenInfo = res.data;
+      _this.batsmenInfo = res.data;
+    }).catch(function (err) {
+      console.log(err.response);
+    });
+
+    // now get only bowlers table info
+    axios.get(this.base_url + '/bowlings').then(function (res) {
+      // console.log(res.data);
+      _this.bowlersInfo = res.data;
+    }).catch(function (err) {
+      console.log(err.response);
+    });
+
+    // now get team member info related to batters from the battings table
+    axios.get(this.base_url + '/battings/get-batting-team-members').then(function (res) {
+      // console.log(res.data);
+      _this.batsmanOneName = res.data[0].member_name;
+      _this.batsmanTwoName = res.data[1].member_name;
+    }).catch(function (err) {
+      console.log(err.response);
+    });
+
+    // now get all the team, team member info related to bowlers from the bowllings table
+    axios.get(this.base_url + '/bowlings/get-bowling-team-members').then(function (res) {
+      // console.log(res.data);
+      _this.bowlerName = res.data.member_name;
+    }).catch(function (err) {
+      console.log(err.response);
     });
   }
 });
@@ -54709,10 +54739,80 @@ var render = function() {
       _c("span", { staticClass: "Score" })
     ]),
     _vm._v(" "),
-    _vm._m(0),
+    _c("div", { staticClass: "card" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "tab-pane fade show active",
+              attrs: {
+                id: "nav-score",
+                role: "tabpanel",
+                "aria-labelledby": "nav-score-tab"
+              }
+            },
+            [
+              _c("table", { staticClass: "table " }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.modifiedBatsmenInfo, function(item, index) {
+                    return _c("tr", { key: index }, [
+                      _c("td", { staticClass: "name" }, [
+                        _vm._v(_vm._s(item.name))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.runs))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.balls))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.fours))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.sixes))])
+                    ])
+                  })
+                ),
+                _vm._v(" "),
+                _vm._m(2),
+                _vm._v(" "),
+                _c("tbody", [
+                  _c("tr", [
+                    _c("td", { staticClass: "name" }, [
+                      _vm._v(_vm._s(_vm.modifiedBowlerInfo.name))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.modifiedBowlerInfo.overs))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(_vm._s(_vm.modifiedBowlerInfo.maiden_overs))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(_vm._s(_vm.modifiedBowlerInfo.runs_given))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(_vm._s(_vm.modifiedBowlerInfo.wicket_taken))
+                    ])
+                  ])
+                ])
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm._m(3)
+        ]
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "container buttonSection" }, [
-      _vm._m(1),
+      _vm._m(4),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("table", { staticClass: "table table-borderless table-sm" }, [
@@ -54775,9 +54875,9 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(2),
+              _vm._m(5),
               _vm._v(" "),
-              _vm._m(3),
+              _vm._m(6),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer" }, [
                 _c(
@@ -54815,260 +54915,173 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("nav", [
-        _c(
-          "div",
-          {
-            staticClass: "nav nav-tabs",
-            attrs: { id: "nav-tab", role: "tablist" }
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "nav-item nav-link active",
-                attrs: {
-                  id: "nav-score-tab",
-                  "data-toggle": "tab",
-                  href: "#nav-score",
-                  role: "tab",
-                  "aria-controls": "nav-score",
-                  "aria-selected": "true"
-                }
-              },
-              [_vm._v("Score")]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "nav-item nav-link",
-                attrs: {
-                  id: "nav-edit-tab",
-                  "data-toggle": "tab",
-                  href: "#nav-edit",
-                  role: "tab",
-                  "aria-controls": "nav-edit",
-                  "aria-selected": "false"
-                }
-              },
-              [_vm._v("Edit")]
-            )
-          ]
-        )
-      ]),
-      _vm._v(" "),
+    return _c("nav", [
       _c(
         "div",
-        { staticClass: "tab-content", attrs: { id: "nav-tabContent" } },
+        {
+          staticClass: "nav nav-tabs",
+          attrs: { id: "nav-tab", role: "tablist" }
+        },
         [
           _c(
-            "div",
+            "a",
             {
-              staticClass: "tab-pane fade show active",
+              staticClass: "nav-item nav-link active",
               attrs: {
-                id: "nav-score",
-                role: "tabpanel",
-                "aria-labelledby": "nav-score-tab"
+                id: "nav-score-tab",
+                "data-toggle": "tab",
+                href: "#nav-score",
+                role: "tab",
+                "aria-controls": "nav-score",
+                "aria-selected": "true"
               }
             },
-            [
-              _c("table", { staticClass: "table " }, [
-                _c("thead", { staticClass: "thead-light" }, [
-                  _c("tr", [
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("Batters")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("R")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("B")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("4s")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("6s")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tbody", [
-                  _c("tr", [
-                    _c("td", { staticClass: "name" }, [_vm._v("Batter 1")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c("td", { staticClass: "name" }, [_vm._v("Batter 2")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c("td", [_vm._v("PARTNERSHIP")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("thead", { staticClass: "thead-light" }, [
-                  _c("tr", [
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("Bowlers")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("O")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("M")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("R")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("W")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tbody", [
-                  _c("tr", [
-                    _c("td", { staticClass: "name" }, [_vm._v("bowler 1")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c("td", { staticClass: "name" }, [_vm._v("bowler 2")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("4")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("0")])
-                  ])
-                ])
-              ])
-            ]
+            [_vm._v("Score")]
           ),
           _vm._v(" "),
           _c(
-            "div",
+            "a",
             {
-              staticClass: "tab-pane fade",
+              staticClass: "nav-item nav-link",
               attrs: {
-                id: "nav-edit",
-                role: "tabpanel",
-                "aria-labelledby": "nav-edit-tab"
+                id: "nav-edit-tab",
+                "data-toggle": "tab",
+                href: "#nav-edit",
+                role: "tab",
+                "aria-controls": "nav-edit",
+                "aria-selected": "false"
               }
             },
-            [
-              _c("table", { staticClass: "table editSection" }, [
-                _c("thead", { staticClass: "bgChange" }, [
-                  _c("tr", [
-                    _c("th", { attrs: { scope: "col" } }),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [
-                      _vm._v("Ball-by-Ball")
-                    ]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("INSERT")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("EDIT")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tbody", [
-                  _c("tr", { staticClass: "bgChange" }, [
-                    _c("td", [_vm._v("Over 1")]),
-                    _vm._v(" "),
-                    _c("td"),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("12 runs, 12/0")]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", {
-                        attrs: { src: "/image/insert.jpg", alt: "" }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", {
-                        attrs: { src: "/image/edit-bgChange.jpg", alt: "" }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", {}, [
-                    _c("td", [_vm._v("0.3")]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", {
-                        attrs: { src: "/image/button-four.jpg", alt: "" }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm._v(
-                        "\n                  batter name\n                "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td"),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", { attrs: { src: "/image/edit.jpg", alt: "" } })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", {}, [
-                    _c("td", [_vm._v("0.2")]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", {
-                        attrs: { src: "/image/button-two.jpg", alt: "" }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm._v(
-                        "\n                  batter name\n                "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td"),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", { attrs: { src: "/image/edit.jpg", alt: "" } })
-                    ])
-                  ])
-                ])
-              ])
-            ]
+            [_vm._v("Edit")]
           )
         ]
       )
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Batters")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("R")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("B")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("4s")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("6s")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Bowlers")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("O")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("M")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("R")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("W")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "tab-pane fade",
+        attrs: {
+          id: "nav-edit",
+          role: "tabpanel",
+          "aria-labelledby": "nav-edit-tab"
+        }
+      },
+      [
+        _c("table", { staticClass: "table editSection" }, [
+          _c("thead", { staticClass: "bgChange" }, [
+            _c("tr", [
+              _c("th", { attrs: { scope: "col" } }),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Ball-by-Ball")]),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("INSERT")]),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("EDIT")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("tbody", [
+            _c("tr", { staticClass: "bgChange" }, [
+              _c("td", [_vm._v("Over 1")]),
+              _vm._v(" "),
+              _c("td"),
+              _vm._v(" "),
+              _c("td", [_vm._v("12 runs, 12/0")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", { attrs: { src: "/image/insert.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", {
+                  attrs: { src: "/image/edit-bgChange.jpg", alt: "" }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", {}, [
+              _c("td", [_vm._v("0.3")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", { attrs: { src: "/image/button-four.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _vm._v("\n                  batter name\n                ")
+              ]),
+              _vm._v(" "),
+              _c("td"),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", { attrs: { src: "/image/edit.jpg", alt: "" } })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", {}, [
+              _c("td", [_vm._v("0.2")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", { attrs: { src: "/image/button-two.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _vm._v("\n                  batter name\n                ")
+              ]),
+              _vm._v(" "),
+              _c("td"),
+              _vm._v(" "),
+              _c("td", [
+                _c("img", { attrs: { src: "/image/edit.jpg", alt: "" } })
+              ])
+            ])
+          ])
+        ])
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -55806,6 +55819,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    reloadPage: function reloadPage() {
+      location.reload();
+    },
     saveEditTeamData: function saveEditTeamData() {
       var _this2 = this;
 
@@ -55814,11 +55830,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           if (res.data.status) {
             _this2.hasStatus = true;
             _this2.statusMessage = res.data.status;
-          } else {
-            // console.log(res.data);
-            // this.batterNames = res.data;
-          }
-          location.reload();
+          } else {}
+          // console.log(res.data);
+          // this.batterNames = res.data;
+
+          // location.reload();
         }).catch(function (err) {
           console.log(err.response);
         });
@@ -55842,7 +55858,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         method: 'put',
         url: this.base_url + '/team-member/' + item.id,
         data: {
-          picked_names: item.member_name
+          picked_name: item.member_name
         },
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -56054,7 +56070,30 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._m(1)
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        _vm.reloadPage()
+                      }
+                    }
+                  },
+                  [_vm._v("Save Team Members")]
+                )
+              ])
             ])
           ]
         )
@@ -56079,7 +56118,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -56126,7 +56165,7 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-group input-group-sm mb-3" }, [
-                  _vm._m(3),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -56212,30 +56251,6 @@ var staticRenderFns = [
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-secondary",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Save Team Members")]
       )
     ])
   },

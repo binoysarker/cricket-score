@@ -21,3 +21,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('settings','SettingController');
+Route::get('battings/get-batting-team-members','BattingController@getBattingTeamMembers');
+Route::resource('battings','BattingController');
+
+Route::get('bowlings/get-bowling-team-members','BowlingController@getBowlingTeamMembers');
+Route::resource('bowlings','BowlingController');

@@ -14,7 +14,22 @@ class BattingController extends Controller
      */
     public function index()
     {
-        //
+      // get the last two rows from the battings table
+      $batting = Batting::orderBy('id','desc')->limit(2)->get();
+      return $batting;
+    }
+    /**
+    * getBattingTeamMembers
+    */
+    public function getBattingTeamMembers()
+    {
+      // return $id;
+      // get the last two rows from the battings table
+      $batting = Batting::orderBy('id','desc')->limit(2)->get();
+      foreach ($batting as $value) {
+        $getAllTeamMember[] = $value->teamMember;
+      }
+      return $getAllTeamMember;
     }
 
     /**
