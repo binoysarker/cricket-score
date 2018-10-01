@@ -290,17 +290,15 @@ import {bus} from '../../app';
 <style lang="css" scoped>
 /* Enter and leave animations can use different */
 /* durations and timing functions.              */
-.slide-fade-enter-active {
-  transition: all .3s ease;
-}
-.slide-fade-leave-active {
-  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all .5s ease;
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(100px);
+  transform: translateX(-100px);
   opacity: 0;
 }
+
 .bg-change{
   background-color: #235594;
 }

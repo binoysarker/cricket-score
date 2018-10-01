@@ -51,7 +51,17 @@ class BowlingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $bowling = Bowling::all()->last();
+        $bowling->overs = $request->overs;
+        $bowling->maiden_overs = $request->maiden_overs;
+        $bowling->runs_given = $request->runs_given;
+        $bowling->no_ball = $request->no_ball;
+        $bowling->wide_ball = $request->wide_ball;
+        $bowling->leg_bye = $request->leg_bye;
+        $bowling->bye = $request->bye;
+        $bowling->wicket_taken = $request->wicket_taken;
+        $bowling->save();
+        return $bowling;
     }
 
     /**

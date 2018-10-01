@@ -50,7 +50,34 @@ class BattingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request->all();
+        if ($request->batter_runs == 4) {
+          $batting = Batting::find($request->batter_id);
+          $batting->runs += $request->batter_runs;
+          $batting->balls = $request->batter_balls;
+          $batting->fours += 1;
+          $batting->save();
+          return $batting;
+        }
+        else if ($request->batter_runs == 6) {
+          $batting = Batting::find($request->batter_id);
+          $batting->runs += $request->batter_runs;
+          $batting->balls = $request->batter_balls;
+          $batting->sixes += 1;
+          $batting->save();
+          return $batting;
+        }
+        else if ($request->batter_runs == 'no_ball' || $request->batter_runs == 'wide_ball' || $request->batter_runs == 'leg_bye' || $request->batter_runs == 'bye' || $request->batter_runs == 'wicket_taken') {
+          return $request->batter_runs;
+        }
+        else {
+          $batting = Batting::find($request->batter_id);
+          $batting->runs += $request->batter_runs;
+          $batting->balls = $request->batter_balls;
+          $batting->save();
+          return $batting;
+        }
+
     }
 
     /**
@@ -84,7 +111,7 @@ class BattingController extends Controller
      */
     public function update(Request $request, Batting $batting)
     {
-        //
+        // return $request->all();
     }
 
     /**

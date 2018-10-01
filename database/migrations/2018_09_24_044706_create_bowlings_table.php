@@ -19,7 +19,7 @@ class CreateBowlingsTable extends Migration
             $table->integer('team_id');
             $table->integer('team_member_id');
             $table->tinyInteger('bowler')->default(0);
-            $table->integer('overs')->default(0);
+            $table->float('overs',8,2)->default(0);
             $table->integer('maiden_overs')->default(0);
             $table->integer('runs_given')->default(0);
             $table->integer('no_ball')->default(0);

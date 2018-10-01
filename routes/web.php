@@ -26,3 +26,4 @@ Route::resource('battings','BattingController');
 
 Route::get('bowlings/get-bowling-team-members','BowlingController@getBowlingTeamMembers');
 Route::resource('bowlings','BowlingController');
+Route::resource('partnership','PartnershipController');
